@@ -1,0 +1,25 @@
+-e git+https://github.com/AusDTO/dto-digitalmarketplace-utils.git@master#egg=dto-digitalmarketplace-utils
+-e git+https://github.com/AusDTO/dto-digitalmarketplace-apiclient.git@master#egg=dto-digitalmarketplace-apiclient
+
+-e .
+
+pytest
+pep8
+flake8
+requests-mock
+mock
+flasgger
+freezegun
+nose
+coverage
+pytest-cov
+pytest-xdist
+pytest-sugar
+python-coveralls
+hypothesis
+rollbar
+blinker
+sqlbag
+migra
+tox
+faker
