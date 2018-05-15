@@ -30,6 +30,10 @@ var argv = require('yargs')
   .argv;
 
 var app = express();
+if (isDev) {
+  app.use(morgan('tiny'));
+  app.use('/api', proxy({target: 'http://localhost:5000'}))
+}
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(compression());
 app.use('/bundle', express.static('build'));
@@ -41,11 +45,6 @@ app.use(function errorHandler(err, request, response, next) {
 });
 // Use the rollbar error handler to send exceptions to your rollbar account
 app.use(rollbar.errorHandler());
-
-if (isDev) {
-  app.use(morgan('tiny'));
-  app.use('/api', proxy({target: 'http://localhost:5000', changeOrigin: true}))
-}
 
 app.set('view engine', 'ejs');
 
