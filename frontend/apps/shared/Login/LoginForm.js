@@ -9,7 +9,7 @@ import { required, validEmail, passwordLength } from '../../shared/validators'
 import LoadingButton from '../LoadingButton/LoadingButton'
 
 const LoginForm = props => {
-  const { model, submitClicked, handleSubmit, currentlySending, rootPath, framework } = props
+  const { model, submitClicked, handleSubmit, currentlySending, framework } = props
 
   let hasFocused = false
   const setFocus = e => {
@@ -36,7 +36,7 @@ const LoginForm = props => {
           </header>
           <p>
             New to {framework}?{' '}
-            <Link to={`${rootPath}/signup`}>
+            <Link to={`/signup`}>
               <strong>Create your account</strong>.
             </Link>
           </p>
@@ -68,7 +68,7 @@ const LoginForm = props => {
               }}
             />
             <p>
-              <Link to={`${rootPath}/reset-password`}>
+              <Link to={`/reset-password`}>
                 <strong>Forgot your password?</strong>
               </Link>
             </p>
@@ -95,7 +95,6 @@ LoginForm.propTypes = {
   submitClicked: PropTypes.func,
   handleSubmit: PropTypes.func,
   currentlySending: PropTypes.bool,
-  rootPath: PropTypes.string.isRequired,
   framework: PropTypes.string.isRequired
 }
 

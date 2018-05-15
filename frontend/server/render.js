@@ -34,7 +34,6 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(compression());
 app.use('/bundle', express.static('build'));
 app.use('/static', express.static('build/static'));
-app.use('/api', proxy({target: 'http://localhost:5000', changeOrigin: true}))
 
 app.use(function errorHandler(err, request, response, next) {
   console.log('[' + new Date().toISOString() + '] ' + err.stack);
@@ -45,6 +44,7 @@ app.use(rollbar.errorHandler());
 
 if (isDev) {
   app.use(morgan('tiny'));
+  app.use('/api', proxy({target: 'http://localhost:5000', changeOrigin: true}))
 }
 
 app.set('view engine', 'ejs');

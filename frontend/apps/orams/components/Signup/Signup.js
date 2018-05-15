@@ -90,7 +90,7 @@ const Signup = props => {
                   />
                   <p>
                     By creating an account you confirm your acceptance of our{' '}
-                    <a href="/orams/terms-of-use" rel="external">
+                    <a href="/terms-of-use" rel="external">
                       <strong>Terms of Use</strong>
                     </a>
                   </p>

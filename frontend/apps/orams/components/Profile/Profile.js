@@ -68,7 +68,7 @@ class Profile extends Component {
                       <div className={styles.contactSection}>
                         <div className={styles.contactTitle}>Update your profile and service pricing</div>
                         <br />
-                        <a href="/orams/edit-profile">
+                        <a href="/edit-profile">
                           <div className="au-btn">Edit Profile</div>
                         </a>
                       </div>

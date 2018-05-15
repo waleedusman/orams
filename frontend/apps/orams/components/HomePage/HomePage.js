@@ -7,7 +7,6 @@ import LoginForm from 'shared/Login/LoginForm'
 import BaseForm from 'shared/form/BaseForm'
 import formProps from 'shared/form/formPropsSelector'
 import { login } from 'orams/actions/appActions'
-import { rootPath } from 'orams/routes'
 
 export class HomePageComponent extends BaseForm {
   static propTypes = {
@@ -33,7 +32,7 @@ export class HomePageComponent extends BaseForm {
 
   render() {
     const { model, loggedIn, handleSubmit, currentlySending, userType } = this.props
-    const initialPage = userType === 'buyer' ? '/orams/seller-catalogue' : '/orams/profile'
+    const initialPage = userType === 'buyer' ? '/seller-catalogue' : '/profile'
 
     return (
       <div>
@@ -46,7 +45,6 @@ export class HomePageComponent extends BaseForm {
                   handleSubmit={handleSubmit}
                   model={model}
                   currentlySending={currentlySending}
-                  rootPath={rootPath}
                   framework="ORAMS"
                 />}
           </div>

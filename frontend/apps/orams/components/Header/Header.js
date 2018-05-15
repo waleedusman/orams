@@ -4,7 +4,6 @@ import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { rootPath } from 'orams/routes'
 import styles from 'orams/components/Header/Header.scss'
 
 class Header extends Component {
@@ -13,28 +12,28 @@ class Header extends Component {
 
     const home = () => {
       if (loggedIn && userType === 'buyer') {
-        return '/orams/seller-catalogue'
+        return '/seller-catalogue'
       } else if (loggedIn && userType === 'supplier') {
-        return '/orams/profile'
+        return '/profile'
       } else {
-        return '/orams'
+        return '/'
       }
     }
 
     const secondaryLink = () => {
       if (loggedIn && userType === 'buyer') {
-        return <Link to={`${rootPath}/seller-catalogue`}>Service Matrix</Link>
+        return <Link to={`/seller-catalogue`}>Service Matrix</Link>
       } else if (loggedIn && userType === 'supplier') {
-        return <Link to={`${rootPath}/edit-profile`}>Edit Profile</Link>
+        return <Link to={`/edit-profile`}>Edit Profile</Link>
       } else {
-        return <Link to={`${rootPath}/signup`}>Sign up</Link>
+        return <Link to={`/signup`}>Sign up</Link>
       }
     }
 
     return (
       <div>
         <section
-          className={`${!loggedIn && location.pathname === '/orams'
+          className={`${!loggedIn && location.pathname === '/'
             ? styles.homepageMarketplaceHeader
             : ''} ${styles.marketplaceHeader} `}
         >
@@ -43,7 +42,7 @@ class Header extends Component {
               <a href={home()} title="Go to the ORAMS homepage" className={styles.logo}>
                 <span>ORAMS</span>
               </a>
-              {location.pathname === '/orams' &&
+              {location.pathname === '/' &&
                 <div className={styles.subtitle}>Occupational Rehabilitation and Associated Medical Services</div>}
             </div>
             <div className={styles.userNav}>
@@ -57,13 +56,13 @@ class Header extends Component {
                   </li>
                   {loggedIn && userType == 'buyer'
                     ? <li>
-                        <Link to={`${rootPath}/price-history`}>Price history</Link>
+                        <Link to={`/price-history`}>Price history</Link>
                       </li>
                     : ''}
                   <li>
                     {loggedIn
-                      ? <Link to={`${rootPath}/logout`}>Sign out</Link>
-                      : <Link to={`${rootPath}/login`}>Sign in</Link>}
+                      ? <Link to={`/logout`}>Sign out</Link>
+                      : <Link to={`/login`}>Sign in</Link>}
                   </li>
                 </ul>
               </div>

@@ -32,7 +32,7 @@ const Signup = props => {
                   <AUpageAlert as="success">
                     <h4>
                       Success, your account has been activated. Please{' '}
-                      <a href="/orams/login">
+                      <a href="/login">
                         <strong>login</strong>
                       </a>
                     </h4>
@@ -71,7 +71,7 @@ const Signup = props => {
                           label={
                             <span>
                               I accept the{' '}
-                              <a href="/orams/terms-of-use" rel="external">
+                              <a href="/terms-of-use" rel="external">
                                 <strong>Terms of Use</strong>
                               </a>
                             </span>

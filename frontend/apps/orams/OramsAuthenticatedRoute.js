@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Route, Redirect, withRouter } from 'react-router-dom'
 import LoadingIndicator from 'shared/LoadingIndicator/LoadingIndicator'
-import { rootPath } from 'orams/routes'
 import FrameworkError from 'shared/FrameworkError/FrameworkError'
 
 const PrivateRouteComponent = props => {
@@ -24,7 +23,7 @@ const PrivateRouteComponent = props => {
           ? <LoadingIndicator />
           : <Redirect
               to={{
-                pathname: customRedirectPath || `${rootPath}/login`,
+                pathname: customRedirectPath || `/login`,
                 state: { from: values.location }
               }}
             />

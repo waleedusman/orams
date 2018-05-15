@@ -39,21 +39,21 @@ class EditProfilePage extends Component {
       id: 'profile',
       label: 'Business basics',
       component: BusinessDetailsForm,
-      pattern: '/orams/edit-profile',
+      pattern: '/edit-profile',
       formKey: 'businessDetailsForm'
     },
     {
       id: 'info',
       label: 'Contacts',
       component: YourInfoForm,
-      pattern: '/orams/edit-profile/your-info',
+      pattern: '/edit-profile/your-info',
       formKey: 'yourInfoForm'
     },
     {
       id: 'pricing',
       label: 'Pricing',
       component: PricingDetailsForm,
-      pattern: '/orams/edit-profile/edit-pricing',
+      pattern: '/edit-profile/edit-pricing',
       formKey: 'pricingDetailsForm'
     }
   ]

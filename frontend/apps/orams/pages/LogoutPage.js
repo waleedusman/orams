@@ -6,7 +6,6 @@ import { withRouter, Redirect } from 'react-router-dom'
 import BaseForm from 'shared/form/BaseForm'
 import LoadingIndicator from 'shared/LoadingIndicator/LoadingIndicator'
 import { logout } from 'orams/actions/appActions'
-import { rootPath } from 'orams/routes'
 
 export class LogoutPageComponent extends BaseForm {
   static propTypes = {
@@ -26,7 +25,7 @@ export class LogoutPageComponent extends BaseForm {
     return (
       <main>
         <div id="logout-page">
-          {loggedIn ? <LoadingIndicator /> : <Redirect to={{ pathname: `${rootPath}/login` }} />}
+          {loggedIn ? <LoadingIndicator /> : <Redirect to={{ pathname: `/login` }} />}
         </div>
       </main>
     )

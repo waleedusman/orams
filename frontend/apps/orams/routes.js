@@ -20,27 +20,25 @@ import SignupPage from 'orams/pages/SignupPage'
 import InvitationPage from 'orams/pages/InvitationPage'
 import CreatePasswordPage from 'orams/pages/CreatePasswordPage'
 
-export const rootPath = '/'
-
 export const Routes = () =>
   <Switch>
-    <Route exact path={rootPath} component={HomePage} />
-    <Route path={`${rootPath}/signup`} component={SignupPage} />
-    <Route path={`${rootPath}/login`} component={LoginPage} />
-    <Route path={`${rootPath}/logout`} component={LogoutPage} />
-    <PrivateRoute path={`${rootPath}/edit-profile`} component={EditProfilePage} />
-    <PrivateRoute path={`${rootPath}/seller-catalogue`} component={SellerCataloguePage} />
-    <PrivateRoute path={`${rootPath}/seller-profile/:id`} component={SellerProfilePage} />
-    <PrivateRoute path={`${rootPath}/price-history`} component={PriceHistoryPage} />
-    <PrivateRoute path={`${rootPath}/profile`} component={ProfilePage} />
-    <Route path={`${rootPath}/reset-password`} component={ResetPasswordPage} />
-    <Route path={`${rootPath}/terms-of-use`} component={TermsPage} />
-    <Route path={`${rootPath}/privacy-policy`} component={PrivacyPolicyPage} />
-    <Route path={`${rootPath}/security`} component={SecurityPage} />
-    <Route path={`${rootPath}/disclaimer`} component={DisclaimerPage} />
-    <Route path={`${rootPath}/copyright`} component={CopyrightPage} />
-    <Route path={`${rootPath}/send-invite/:token`} component={InvitationPage} />
-    <Route path={`${rootPath}/create-user/:token`} component={CreatePasswordPage} />
+    <Route exact path='/' component={HomePage} />
+    <Route path={`/signup`} component={SignupPage} />
+    <Route path={`/login`} component={LoginPage} />
+    <Route path={`/logout`} component={LogoutPage} />
+    <PrivateRoute path={`/edit-profile`} component={EditProfilePage} />
+    <PrivateRoute path={`/seller-catalogue`} component={SellerCataloguePage} />
+    <PrivateRoute path={`/seller-profile/:id`} component={SellerProfilePage} />
+    <PrivateRoute path={`/price-history`} component={PriceHistoryPage} />
+    <PrivateRoute path={`/profile`} component={ProfilePage} />
+    <Route path={`/reset-password`} component={ResetPasswordPage} />
+    <Route path={`/terms-of-use`} component={TermsPage} />
+    <Route path={`/privacy-policy`} component={PrivacyPolicyPage} />
+    <Route path={`/security`} component={SecurityPage} />
+    <Route path={`/disclaimer`} component={DisclaimerPage} />
+    <Route path={`/copyright`} component={CopyrightPage} />
+    <Route path={`/send-invite/:token`} component={InvitationPage} />
+    <Route path={`/create-user/:token`} component={CreatePasswordPage} />
     <Route component={NotFound} />
   </Switch>
 

@@ -17,19 +17,19 @@ const PageFooter = () =>
               </h2>
               <ul className="au-link-list">
                 <li>
-                  <a href="/orams/terms-of-use">Terms of Use</a>
+                  <a href="/terms-of-use">Terms of Use</a>
                 </li>
                 <li>
-                  <a href="/orams/privacy-policy">Privacy</a>
+                  <a href="/privacy-policy">Privacy</a>
                 </li>
                 <li>
-                  <a href="/orams/security">Security</a>
+                  <a href="/security">Security</a>
                 </li>
                 <li>
-                  <a href="/orams/disclaimer">Disclaimer</a>
+                  <a href="/disclaimer">Disclaimer</a>
                 </li>
                 <li>
-                  <a href="/orams/copyright">Copyright</a>
+                  <a href="/copyright">Copyright</a>
                 </li>
               </ul>
             </div>

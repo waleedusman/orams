@@ -33,7 +33,7 @@ export class LoginPageComponent extends BaseForm {
 
   render() {
     const { model, loggedIn, handleSubmit, currentlySending, userType } = this.props
-    const initialPage = userType === 'buyer' ? '/orams/seller-catalogue' : '/orams/profile'
+    const initialPage = userType === 'buyer' ? '/seller-catalogue' : '/profile'
 
     return (
       <main>

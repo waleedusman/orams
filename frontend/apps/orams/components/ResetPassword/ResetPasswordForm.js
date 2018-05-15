@@ -5,7 +5,6 @@ import AUpageAlert from '@gov.au/page-alerts/lib/js/react.js'
 import ErrorBox from '../../../shared/form/ErrorBox'
 import Textfield from '../../../shared/form/Textfield'
 import { passwordLength } from '../../../shared/validators'
-import { rootPath } from '../../routes'
 
 import styles from './ResetPassword.scss'
 
@@ -31,7 +30,7 @@ const ResetPasswordForm = props => {
                   <h4>You have successfully changed your password</h4>
                   <span>
                     <p>
-                      Please <a href={`${rootPath}/login`}> login </a> to continue.
+                      Please <a href={`/login`}> login </a> to continue.
                     </p>
                   </span>
                 </AUpageAlert>

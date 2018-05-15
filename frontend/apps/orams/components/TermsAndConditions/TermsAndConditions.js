@@ -81,7 +81,7 @@ const TermsAndConditions = props => {
         </a>
         <p>
           We apply a range of security controls to protect the Digital Marketplace from unauthorised access, as
-          described in our <a href="/orams/security">security statement</a>. However, you agree that:
+          described in our <a href="/security">security statement</a>. However, you agree that:
         </p>
         <ul>
           <li>The World Wide Web is an unsecure public network.</li>
@@ -232,7 +232,7 @@ const TermsAndConditions = props => {
 
         <p>
           Any personal information you provide when using the Digital Marketplace will be handled in accordance with our{' '}
-          <a href="/orams/privacy-policy">Privacy Statement</a>.
+          <a href="/privacy-policy">Privacy Statement</a>.
         </p>
       </section>
       <section className="tou-section" id="disclaimer">
