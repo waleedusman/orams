@@ -237,6 +237,30 @@ module.exports = [{
     tls: 'empty'
   }
 }, {
+  name: 'server-side render',
+  entry: './server/render',
+  target: 'node',
+  output: {
+    path: './build',
+    filename: 'render-server.js',
+    publicPath: publicPath,
+    libraryTarget: "commonjs2"
+  },
+  externals: /^[a-z\-0-9]+$/,
+  module: {
+    loaders: loaders.concat({
+      test: /\.css$/,
+      loader: 'ignore-loader'
+    })
+  },
+  plugins: [
+    new webpack.DefinePlugin(env),
+    // This helps ensure the builds are consistent if source hasn't changed:
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    // Try to dedupe duplicated modules, if any:
+    new webpack.optimize.DedupePlugin()
+  ]
+},{
   name: 'orams app',
   entry: [
     require.resolve('./polyfills'),

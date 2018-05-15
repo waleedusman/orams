@@ -254,6 +254,51 @@ module.exports = [{
     net: 'empty',
     tls: 'empty'
   }
+},  {
+  name: 'server-side render',
+  entry: './server/render',
+  devtool: 'source-map',
+  target: 'node',
+  output: {
+    path: './build',
+    filename: 'render-server.js',
+    publicPath: publicPath,
+    libraryTarget: "commonjs2"
+  },
+  externals: /^[a-z\-0-9]+$/,
+  module: {
+    loaders: loaders.concat({
+      test: /\.css$/,
+      loader: 'ignore-loader'
+    })
+  },
+  plugins: [
+    new webpack.DefinePlugin(env),
+    // This helps ensure the builds are consistent if source hasn't changed:
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    // Try to dedupe duplicated modules, if any:
+    new webpack.optimize.DedupePlugin(),
+    // Minify the code.
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compress: {
+        screw_ie8: true, // React doesn't support IE8
+        warnings: false
+      },
+      mangle: {
+        screw_ie8: true
+      },
+      output: {
+        comments: false,
+        screw_ie8: true
+      }
+    }),
+    new RollbarSourceMapPlugin({
+      accessToken: process.env.ROLLBAR_TOKEN || 'notoken',
+      version: process.env.CIRCLE_SHA1 || 'noversion',
+      publicPath: frontendURL + "/bundle"
+    })
+  ]
 }, {
   name: 'orams app',
   entry: [require.resolve('./polyfills'),require.resolve('./rollbar'), './apps/orams/index.js',
