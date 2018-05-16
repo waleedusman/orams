@@ -1,28 +1,33 @@
 # ORAMS
 A website to manage prices for the ATO ORAMS panel.
-## Install
-### Backend
+## Backend
+The API runs at http://localhost:5000.
 ```
 cd backend
 virtualenv venv
 source venv/bin/activate
+
+# run app
+make app_run
+
+# tests
+py.tests tests/fixtures
+
 ```
-### Frontend
+## Frontend
+The frontend node server runs at http://localhost:60000.
 ```
 cd frontend
 npm i
-npm run build:development
-```
-## Run
-### Backend
-```
-make app_run
-```
-This starts the API at http://localhost:5000.
-### Frontend
-```
-npm run server:development
-```
-This starts the node server at http://localhost:60000.
 
-On local, `/api` calls are proxied to http://localhost:5000. 
+# run build and watch files
+npm run build:development
+
+# run node server
+npm run server:development
+
+# tests
+npm test
+```
+## Local Proxy
+On local, `/api` frontend calls are proxied to http://localhost:5000. 
