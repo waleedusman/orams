@@ -46,7 +46,7 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql:///digitalmarketplace'
+    SQLALCHEMY_DATABASE_URI = 'postgresql:///orams'
     BASE_TEMPLATE_DATA = {}
 
     DM_FAILED_LOGIN_LIMIT = 5
@@ -150,7 +150,7 @@ class Test(Config):
     DM_LOG_LEVEL = 'WARN'
     DEBUG = True
     ES_ENABLED = False
-    SQLALCHEMY_DATABASE_URI = 'postgresql:///digitalmarketplace_test'
+    SQLALCHEMY_DATABASE_URI = 'postgresql:///orams_test'
     DM_API_AUTH_TOKENS = 'myToken'
     DM_API_APPLICATIONS_PAGE_SIZE = 5
     DM_API_SERVICES_PAGE_SIZE = 5
