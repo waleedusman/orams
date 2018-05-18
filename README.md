@@ -6,6 +6,7 @@ The API runs at http://localhost:5000.
 cd backend
 virtualenv venv
 source venv/bin/activate
+pip install -r requirements.txt
 
 # run app
 make app_run
