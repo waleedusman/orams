@@ -23,7 +23,7 @@ class Config:
     DM_LOG_LEVEL = 'INFO'
     DM_LOG_PATH = None
     DM_APP_NAME = 'api'
-    DM_REQUEST_ID_HEADER = 'DM-Request-ID'
+    DM_REQUEST_ID_HEADER = 'ORAMS-Request-ID'
     DM_DOWNSTREAM_REQUEST_ID_HEADER = 'X-Amz-Cf-Id'
     DM_API_ADMIN_USERNAME = 'admin'
     DM_API_ADMIN_PASSWORD = None
@@ -120,8 +120,8 @@ class Config:
                              'optusnet.com.au', 'msn.com', 'internode.on.net', 'iinet.net.au', 'ozemail.com.au',
                              'live.com.au', 'digital.gov.au', 'icloud.com', 'me.com']
 
-    FRONTEND_ADDRESS = 'https://dm-dev.apps.y.cld.gov.au'
-    ADMIN_ADDRESS = 'https://dm-dev-admin.apps.y.cld.gov.au'
+    FRONTEND_ADDRESS = 'https://orams-dev.apps.y.cld.gov.au'
+    ADMIN_ADDRESS = 'https://orams-dev-admin.apps.y.cld.gov.au'
     APP_ROOT = {'digital-marketplace': '/2', 'orams': '/orams'}
 
     SEND_EMAILS = True
@@ -213,7 +213,7 @@ class Live(Config):
     }
 
     FRONTEND_ADDRESS = 'https://marketplace.service.gov.au'
-    ADMIN_ADDRESS = 'https://dm-admin.apps.b.cld.gov.au'
+    ADMIN_ADDRESS = 'https://orams-admin.apps.b.cld.gov.au'
 
     SEND_EMAILS = True
     ORAMS_BUYER_INVITE_REQUEST_ADMIN_EMAIL = 'orams@ato.gov.au'

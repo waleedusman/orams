@@ -1,0 +1,15 @@
+command: ./scripts/cf_run_app.sh
+buildpack: python_buildpack
+health-check-type: port
+instances: 4
+memory: 2G
+disk_quota: 512M
+services:
+- pgdb-96-prod
+# - ups-dm-common
+# - ups-dm-api
+routes:
+- route: orams-api.apps.b.cld.gov.au
+- route: orams-api.apps.b.cld.gov.au/api
+applications:
+- name: orams-api

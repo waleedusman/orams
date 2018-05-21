@@ -1,0 +1,15 @@
+command: ./scripts/cf_run_app.sh
+buildpack: python_buildpack
+health-check-type: port
+instances: 1
+memory: 1G
+disk_quota: 512M
+services:
+- orams-dev-shared
+# - ups-dm-dev-common
+# - ups-dm-dev-api
+routes:
+- route: orams-dev-api.apps.y.cld.gov.au
+- route: orams-dev.apps.y.cld.gov.au/api
+applications:
+- name: orams-dev-api
