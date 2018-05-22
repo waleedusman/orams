@@ -7,7 +7,7 @@ disk_quota: 512M
 services:
 - orams-dev-shared
 # - ups-dm-dev-common
-# - ups-dm-dev-api
+- ups-orams-dev-api
 routes:
 - route: orams-dev-api.apps.y.cld.gov.au
 - route: orams-dev.apps.y.cld.gov.au/api

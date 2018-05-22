@@ -4,9 +4,9 @@ buildpack: legacy_marketplace_nodejs_buildpack
 memory: 256M
 disk_quota: 1G
 instances: 1
-# services:
+services:
 # - ups-dm-dev-common
-# - ups-dm-dev-frontend
+- ups-orams-dev-frontend
 routes:
 - route: orams-dev-frontend.apps.y.cld.gov.au
 - route: orams-dev.apps.y.cld.gov.au/

@@ -58,3 +58,4 @@ pancake
 
 venv/
 *.iml
+**/scripts/cloud-config/
