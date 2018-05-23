@@ -1,7 +1,7 @@
-version 2
+version: 2
 
 references:
-  cf-install: &cf-install
+  cf_install: &cf_install
     run:
       command: |
         curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
@@ -9,7 +9,7 @@ references:
         cf install-plugin https://github.com/govau/autopilot/releases/download/0.0.5-venapp/autopilot-linux -f
         cf install-plugin https://github.com/govau/cf-run-and-wait/releases/download/0.1/run-and-wait.linux64 -f
         cf -v
-  postgresql-install: &postgresql-install
+  postgresql_install: &postgresql_install
     run:
       command: |
         sudo service postgresql stop
@@ -21,17 +21,17 @@ references:
         sudo su - postgres -c "echo \"create user ubuntu with password 'ubuntu';\" | psql"
         sudo su - postgres -c "echo \"alter user ubuntu with superuser;\" | psql"
         sudo su - postgres -c "echo \"create database ubuntu;\" | psql"
-  api-monitor: &api-monitor
+  api_monitor: &api_monitor
     run:
       command: |
         pip install awscli
         sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
         sudo chmod +x /usr/local/bin/ecs-cli
         /usr/local/bin/ecs-cli --version
-  master-branch-only: &master-branch-only
+  master_branch_only: &master_branch_only
     filters:
       branches:
-        only:
+        ignore:
           - master
 
 jobs:
@@ -42,7 +42,7 @@ jobs:
           TZ: "/usr/share/zoneinfo/Australia/Sydney"
     steps:
       - checkout
-      - persist_to_workspace
+      - persist_to_workspace:
           root: .
           paths:
             - backend
@@ -51,14 +51,14 @@ jobs:
     docker:
       - image: circleci/python:2.7.14
     steps:
-      - *postgresql-install
-      - *api-monitor
+      - *postgresql_install
+      - *api_monitor
       - attach_workspace:
           at: backend
       - run:
           command: |
             pip install -r requirements.txt
-      - persist_to_work_space:
+      - persist_to_workspace:
           root: ../
           paths:
             - backend
@@ -76,7 +76,7 @@ jobs:
             find . -name "node_modules" -exec rm -rf '{}' + # removing all node_modules/ folder cause circle can’t be trusted with it.
             npm install
             npm run build
-      - persist_to_work_space:
+      - persist_to_workspace:
           root: ../
           paths:
             - frontend
@@ -156,8 +156,8 @@ workflows:
       - test-backend:
           requires:
             - build-backend
-      - deploy-dev-frontend
-        <<: *master-branch-only
+      - deploy-dev-api:
+          <<: *master_branch_only
           requires:
             - test-backend
       - build-frontend:
@@ -167,6 +167,6 @@ workflows:
           requires:
             - build-frontend
       - deploy-dev-frontend:
-          <<: *master-branch-only
+          <<: *master_branch_only
           requires:
             - test-frontend
