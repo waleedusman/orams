@@ -1,0 +1,172 @@
+version 2
+
+references:
+  cf-install: &cf-install
+    run:
+      command: |
+        curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
+        sudo dpkg -i cf-cli_amd64.deb
+        cf install-plugin https://github.com/govau/autopilot/releases/download/0.0.5-venapp/autopilot-linux -f
+        cf install-plugin https://github.com/govau/cf-run-and-wait/releases/download/0.1/run-and-wait.linux64 -f
+        cf -v
+  postgresql-install: &postgresql-install
+    run:
+      command: |
+        sudo service postgresql stop
+        sudo apt-get purge -y postgresql*
+        sudo rm -rf /etc/postgresql
+        sudo rm -rf /var/lib/postgresql
+        sudo apt-get update
+        sudo apt-get install postgresql-9.6
+        sudo su - postgres -c "echo \"create user ubuntu with password 'ubuntu';\" | psql"
+        sudo su - postgres -c "echo \"alter user ubuntu with superuser;\" | psql"
+        sudo su - postgres -c "echo \"create database ubuntu;\" | psql"
+  api-monitor: &api-monitor
+    run:
+      command: |
+        pip install awscli
+        sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
+        sudo chmod +x /usr/local/bin/ecs-cli
+        /usr/local/bin/ecs-cli --version
+  master-branch-only: &master-branch-only
+    filters:
+      branches:
+        only:
+          - master
+
+jobs:
+  setup:
+    docker:
+      - image: circleci/python:2.7.14
+        environment:
+          TZ: "/usr/share/zoneinfo/Australia/Sydney"
+    steps:
+      - checkout
+      - persist_to_workspace
+          root: .
+          paths:
+            - backend
+            - frontend
+  build-api:
+    docker:
+      - image: circleci/python:2.7.14
+    steps:
+      - *postgresql-install
+      - *api-monitor
+      - attach_workspace:
+          at: backend
+      - run:
+          command: |
+            pip install -r requirements.txt
+      - persist_to_work_space:
+          root: ../
+          paths:
+            - backend
+  build-frontend:
+    docker:
+      - image: circleci/node:8.11.1
+        environment:
+          TZ: "/usr/share/zoneinfo/Australia/Sydney"
+          # PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin" # Not sure if this is still required
+    steps:
+      - attach_workspace:
+          at: frontend
+      - run: 
+          command: | 
+            find . -name "node_modules" -exec rm -rf '{}' + # removing all node_modules/ folder cause circle can’t be trusted with it.
+            npm install
+            npm run build
+      - persist_to_work_space:
+          root: ../
+          paths:
+            - frontend
+  test-api:
+    docker:
+      - image: circleci/python:2.7.14
+    steps:
+      - attach_workspace:
+          at: backend
+      - run: 
+          command: |
+            ./scripts/run_tests.sh
+            git log --pretty=format:'%h' -n 1 > version_label
+  test-frontend:
+    docker:
+      - image: circleci/node:8.11.1
+    steps:
+      - attach_workspace:
+          at: frontend
+      - run: 
+        command: | 
+          eslint .
+          npm test
+  deploy-dev-api:
+    docker:
+      - image: circleci/python:2.7.14
+    steps:
+      - *cf_install
+      - run:
+          command: |
+            cf login -a https://api.system.y.cld.gov.au -o dta -s marketplace -u $CF_USER_STAGING -p $CF_PASSWORD_STAGING
+            python ./db_tasks.py v2_test_migration $CIRCLE_BUILD_NUM api.system.y.cld.gov.au $CF_USER_STAGING $CF_PASSWORD_STAGING marketplace-dev-shared
+            cf zero-downtime-push orams-dev-api -f manifest.yml --show-app-log
+            cf run-and-wait orams-dev-api "python ./db_tasks.py do_migration $CIRCLE_BUILD_NUM"
+  deploy-dev-frontend:
+    docker:
+      - image: circleci/node:8.11.1
+    steps:
+      - *cf_install
+      - attach_workspace:
+          at: frontend
+      - run: 
+          command: |
+            cf login -a https://api.system.y.cld.gov.au -o dta -s marketplace -u $CF_USER_STAGING -p $CF_PASSWORD_STAGING
+            cf zero-downtime-push orams-dev-frontend -f manifest.yml --show-app-log
+  deploy-api:
+    docker:
+      - image: circleci/python:2.7.14
+    steps:
+      - *cf_install
+      - run:
+          command: |
+            cf login -a https://api.system.b.cld.gov.au -o dta -s marketplace -u $CF_USER_PROD -p $CF_PASSWORD_PROD
+            python ./db_tasks.py v2_test_migration $CIRCLE_BUILD_NUM api.system.b.cld.gov.au $CF_USER_PROD $CF_PASSWORD_PROD pgdb-96-prod
+            cf zero-downtime-push orams-api -f manifest-prod.yml --show-app-log
+            cf run-and-wait orams-api "python ./db_tasks.py do_migration $CIRCLE_BUILD_NUM"
+  deploy-frontend:
+    docker:
+      - image: circleci/node:8.11.1
+    steps:
+      - *cf_install
+      - attach_workspace:
+          at: frontend
+      - run: 
+          command: |
+            cf login -a https://api.system.b.cld.gov.au -o dta -s marketplace -u $CF_USER_PROD -p $CF_PASSWORD_PROD
+            cf zero-downtime-push orams-frontend -f manifest-prod.yml --show-app-log
+            ./scripts/ci-notify.sh
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - setup
+      - build-backend:
+          requires:
+            - setup
+      - test-backend:
+          requires:
+            - build-backend
+      - deploy-dev-frontend
+        <<: *master-branch-only
+          requires:
+            - test-backend
+      - build-frontend:
+          requires:
+            - setup
+      - test-frontend:
+          requires:
+            - build-frontend
+      - deploy-dev-frontend:
+          <<: *master-branch-only
+          requires:
+            - test-frontend
