@@ -30,6 +30,11 @@ class ResultsTable extends Component {
     }
   }
 
+  onClickReferral(supplierCode, price){
+    this.props.setSelectedSupplierPrice(price)
+    this.props.history.push(`/referral-builder/${supplierCode}`)
+  }
+
   render(props) {
     console.log('ResultsTable:', this.props)
     const { categories, alert } = this.props.data
@@ -82,8 +87,8 @@ class ResultsTable extends Component {
                           </a>
                         </span>
                         <div className={styles.referral}>
-                          <button type="submit" className="au-btn" onClick={() => {
-                            this.props.history.push(`/referral-builder/${supplier.code}`)
+                          <button className="au-btn" onClick={() => {
+                            this.onClickReferral(supplier.code, supplier.price)
                           }}
                           >Send Referral
                           </button>

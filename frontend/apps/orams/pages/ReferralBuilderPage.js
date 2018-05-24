@@ -33,7 +33,8 @@ const mapStateToProps = state => {
   return {
     supplierData: state.sellersCatalogue.supplierData,
     regionCode: state.sellersCatalogue.region,
-    regionsData: state.sellersCatalogue.regionsData
+    regionsData: state.sellersCatalogue.regionsData,
+    price: state.sellersCatalogue.price
   }
 }
 

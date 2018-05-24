@@ -14,6 +14,7 @@ class ReferralBuilder extends Component {
 
   componentDidMount() {
     this.props.loadSupplierData(this.props.id)
+    console.log('ReferralBuilder props: ', this.props)
   }
 
   retrieveRegionName(regionCode, regionData) {
@@ -31,13 +32,16 @@ class ReferralBuilder extends Component {
     return regionName + ' ' + subRegionName
   }
 
+  goBack = (props) => {
+    this.props.history.goBack()
+  }
+
   render() {
-    console.log('ReferralBuilder props: ', this.props)
-    const { supplierData, regionCode, regionsData } = this.props
+    const { supplierData, regionCode, regionsData, price } = this.props
 
     return (
       <div>
-        {supplierData
+        {supplierData && regionCode && regionsData && price
           ? <div>
             <div>
               <main>
@@ -68,7 +72,7 @@ class ReferralBuilder extends Component {
 
                 <div className="row">
                   <div className="col-sm-3 col-xs-12">
-                    <div className={styles.title}>Operates in </div>
+                    <div className={styles.title}>Operates in</div>
                   </div>
                   <div className={styles.badge}>
                     {this.retrieveRegionName(regionCode, regionsData)}
@@ -82,9 +86,27 @@ class ReferralBuilder extends Component {
                   <div className={styles.badge}>
                    <span className={styles.priceElements}>
                      <div className={styles.price}>
-                            {'$' + supplierData.price + ' ' + 'inc GST'}
+                            {'$' + price + ' ' + 'inc GST'}
                             </div>
                    </span>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-sm-3 col-xs-12">
+                    <div className={styles.title}>Buyer organisation</div>
+                  </div>
+                  <div className={styles.badge}>
+                    <input rows="10" cols="80"></input>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-sm-3 col-xs-12">
+                    <div className={styles.title}>Content</div>
+                  </div>
+                  <div className={styles.badge}>
+                    <textarea rows="10" cols="80"></textarea>
                   </div>
                 </div>
 
@@ -93,7 +115,14 @@ class ReferralBuilder extends Component {
             </div>
             <div className={styles.informationSection}>
               <main>
+                <div className={styles.referral}>
+                  <button className="au-btn" onClick={() => {
+                    this.props.history.goBack()
+                  }}
+                  >Cancel
+                  </button>
 
+                </div>
               </main>
             </div>
           </div>
