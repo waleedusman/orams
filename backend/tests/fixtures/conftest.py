@@ -24,14 +24,16 @@ fake = Faker()
 def db_initialization(request):
     from config import configs
 
-    with temporary_database() as dburi:
-        test_config = configs['test']
-        test_config.SQLALCHEMY_DATABASE_URI = dburi
+    # with temporary_database() as dburi:
+    # dburi = 'postgresql://circleci@localhost:5432/orams_test'
+    dburi = 'postgresql:///orams_test'
+    test_config = configs['test']
+    test_config.SQLALCHEMY_DATABASE_URI = 'dburi'
 
-        load_from_app_model(dburi)
-        load_test_fixtures(dburi)
+    load_from_app_model(dburi)
+    load_test_fixtures(dburi)
 
-        yield
+    yield
 
 
 @pytest.fixture()

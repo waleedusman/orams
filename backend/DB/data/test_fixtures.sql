@@ -65,6 +65,7 @@ SELECT pg_catalog.setval('application_id_seq', 1, false);
 -- Data for Name: framework; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+TRUNCATE TABLE framework CASCADE;
 INSERT INTO framework (id, slug, name, framework, status, clarification_questions_open, framework_agreement_details) VALUES (1, 'g-cloud-6', 'G-Cloud 6', 'g-cloud', 'live', false, NULL);
 INSERT INTO framework (id, slug, name, framework, status, clarification_questions_open, framework_agreement_details) VALUES (2, 'g-cloud-4', 'G-Cloud 4', 'g-cloud', 'expired', false, NULL);
 INSERT INTO framework (id, slug, name, framework, status, clarification_questions_open, framework_agreement_details) VALUES (3, 'g-cloud-5', 'G-Cloud 5', 'g-cloud', 'live', false, NULL);
@@ -79,6 +80,7 @@ INSERT INTO framework (id, slug, name, framework, status, clarification_question
 -- Data for Name: lot; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+TRUNCATE TABLE lot CASCADE;
 INSERT INTO lot (id, slug, name, one_service_limit, data) VALUES (1, 'saas', 'Software as a Service', false, '{"unitSingular": "service", "unitPlural": "services"}');
 INSERT INTO lot (id, slug, name, one_service_limit, data) VALUES (2, 'paas', 'Platform as a Service', false, '{"unitSingular": "service", "unitPlural": "services"}');
 INSERT INTO lot (id, slug, name, one_service_limit, data) VALUES (3, 'iaas', 'Infrastructure as a Service', false, '{"unitSingular": "service", "unitPlural": "services"}');
@@ -96,6 +98,7 @@ INSERT INTO lot (id, slug, name, one_service_limit, data) VALUES (11, 'orams', '
 -- Data for Name: framework_lot; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+TRUNCATE TABLE framework_lot CASCADE;
 INSERT INTO framework_lot (framework_id, lot_id) VALUES (1, 1);
 INSERT INTO framework_lot (framework_id, lot_id) VALUES (1, 2);
 INSERT INTO framework_lot (framework_id, lot_id) VALUES (1, 3);
@@ -152,7 +155,7 @@ SELECT pg_catalog.setval('audit_event_id_seq', 1, false);
 --
 -- Data for Name: domain; Type: TABLE DATA; Schema: public; Owner: -
 --
-    
+TRUNCATE TABLE domain CASCADE;
 INSERT INTO domain (id, name, ordering, price_minimum, price_maximum) VALUES (1, 'Strategy and Policy'                     , 1 , 0, 10000);
 INSERT INTO domain (id, name, ordering, price_minimum, price_maximum) VALUES (2, 'Change, Training and Transformation'     , 2 , 0, 10000);
 INSERT INTO domain (id, name, ordering, price_minimum, price_maximum) VALUES (3, 'User research and Design'                , 3 , 0, 10000);
@@ -282,7 +285,7 @@ SELECT pg_catalog.setval('lot_id_seq', 11, true);
 --
 -- Data for Name: service_category; Type: TABLE DATA; Schema: public; Owner: -
 --
-
+TRUNCATE TABLE service_category CASCADE;
 INSERT INTO service_category (id, name, abbreviation) VALUES (1, 'Product Management', 'pm');
 INSERT INTO service_category (id, name, abbreviation) VALUES (2, 'Business Analysis', 'ba');
 INSERT INTO service_category (id, name, abbreviation) VALUES (3, 'Delivery Management and Agile Coaching', 'dm');
@@ -299,7 +302,7 @@ INSERT INTO service_category (id, name, abbreviation) VALUES (11, 'Rehabilitatio
 --
 -- Data for Name: service_role; Type: TABLE DATA; Schema: public; Owner: -
 --
-
+TRUNCATE TABLE service_role CASCADE;
 INSERT INTO service_role (id, category_id, name, abbreviation) VALUES (11, 1, 'Junior Product Manager', 'pm-j');
 INSERT INTO service_role (id, category_id, name, abbreviation) VALUES (12, 1, 'Senior Product Manager', 'pm-s');
 INSERT INTO service_role (id, category_id, name, abbreviation) VALUES (21, 2, 'Junior Business Analyst', 'ba-j');

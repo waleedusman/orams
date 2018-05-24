@@ -77,7 +77,7 @@ def load_schemas(schemas_path, schema_names):
     return loaded_schemas
 
 
-#_SCHEMAS = load_schemas(JSON_SCHEMAS_PATH, SCHEMA_NAMES)
+# _SCHEMAS = load_schemas(JSON_SCHEMAS_PATH, SCHEMA_NAMES)
 
 
 def get_sections(schema_name):
