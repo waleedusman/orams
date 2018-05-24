@@ -14,7 +14,7 @@
   cursor: pointer;
 }
 
-.priceElelments {
+.priceElements {
   float: right;
 }
 
@@ -42,6 +42,10 @@
   font-weight: bold;
   color: #202751;
   margin-left: 40px;
+}
+
+.referral {
+  float: right;
 }
 
 @media screen and (max-width: 767px) {

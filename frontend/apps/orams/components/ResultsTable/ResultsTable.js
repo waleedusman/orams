@@ -31,6 +31,7 @@ class ResultsTable extends Component {
   }
 
   render(props) {
+    console.log('ResultsTable:', this.props)
     const { categories, alert } = this.props.data
 
     return (
@@ -80,6 +81,13 @@ class ResultsTable extends Component {
                             {supplier.email}
                           </a>
                         </span>
+                        <div className={styles.referral}>
+                          <button type="submit" className="au-btn" onClick={() => {
+                            this.props.history.push(`/referral-builder/${supplier.code}`)
+                          }}
+                          >Send Referral
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
