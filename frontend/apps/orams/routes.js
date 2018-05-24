@@ -22,7 +22,7 @@ import CreatePasswordPage from 'orams/pages/CreatePasswordPage'
 
 export const Routes = () =>
   <Switch>
-    <Route exact path='/' component={HomePage} />
+    <Route exact path={'/'} component={HomePage} />
     <Route path={`/signup`} component={SignupPage} />
     <Route path={`/login`} component={LoginPage} />
     <Route path={`/logout`} component={LogoutPage} />

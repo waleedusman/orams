@@ -70,14 +70,15 @@ jobs:
           # PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin" # Not sure if this is still required
     steps:
       - attach_workspace:
-          at: frontend
+          at: .
       - run: 
           command: | 
+            cd frontend
             find . -name "node_modules" -exec rm -rf '{}' + # removing all node_modules/ folder cause circle can’t be trusted with it.
             npm install
             npm run build
       - persist_to_workspace:
-          root: ../
+          root: .
           paths:
             - frontend
   test-api:
@@ -95,11 +96,12 @@ jobs:
       - image: circleci/node:8.11.1
     steps:
       - attach_workspace:
-          at: frontend
+          at: .
       - run: 
-        command: | 
-          eslint .
-          npm test
+          command: |
+            cd frontend 
+            npm run eslint
+            npm test
   deploy-dev-api:
     docker:
       - image: circleci/python:2.7.14
@@ -117,9 +119,10 @@ jobs:
     steps:
       - *cf_install
       - attach_workspace:
-          at: frontend
+          at: .
       - run: 
           command: |
+            cd frontend
             cf login -a https://api.system.y.cld.gov.au -o dta -s marketplace -u $CF_USER_STAGING -p $CF_PASSWORD_STAGING
             cf zero-downtime-push orams-dev-frontend -f manifest.yml --show-app-log
   deploy-api:
@@ -150,16 +153,16 @@ workflows:
   build-and-deploy:
     jobs:
       - setup
-      - build-backend:
-          requires:
-            - setup
-      - test-backend:
-          requires:
-            - build-backend
-      - deploy-dev-api:
-          <<: *master_branch_only
-          requires:
-            - test-backend
+      # - build-api:
+      #     requires:
+      #       - setup
+      # - test-api:
+      #     requires:
+      #       - build-api
+      # - deploy-dev-api:
+      #     <<: *master_branch_only
+      #     requires:
+      #       - test-api
       - build-frontend:
           requires:
             - setup
