@@ -137,7 +137,7 @@ class Config:
     ORAMS_FRAMEWORK = 'orams'
 
     # CELERY
-    CELERY_ASYNC_TASKING_ENABLED = True
+    CELERY_ASYNC_TASKING_ENABLED = False
     CELERY_TIMEZONE = 'UTC'
     CELERYBEAT_SCHEDULE = {}
 
@@ -229,7 +229,7 @@ class Preview(Live):
 class Staging(Development):
     JIRA_FEATURES = True
     BASIC_AUTH = True
-    CELERY_ASYNC_TASKING_ENABLED = True
+    CELERY_ASYNC_TASKING_ENABLED = False
     DM_SEND_EMAIL_TO_STDERR = False
 
 
