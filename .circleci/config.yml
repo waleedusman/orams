@@ -58,19 +58,21 @@ jobs:
   build-api:
     docker:
       - image: circleci/python:2.7.14
-      - image: circleci/postgres:9.6-alpine-ram
-        environment:
-          POSTGRES_USER: ubuntu
-          POSTGRES_DB: ubuntu
-          POSTGRES_PASSWORD: ubuntu
+      # - image: circleci/postgres:9.6-alpine-ram
+      #   environment:
+      #     POSTGRES_USER: ubuntu
+      #     POSTGRES_DB: ubuntu
+      #     POSTGRES_PASSWORD: ubuntu
     steps:
       # - *postgresql_install
-      - *api_monitor
+      # - *api_monitor
       - attach_workspace:
           at: .
       - run:
           command: |
             cd backend
+            printenv
+            sudo chown -R $USER /usr/local/lib/python2.7/
             pip install -r requirements.txt
       - persist_to_workspace:
           root: .
@@ -97,7 +99,7 @@ jobs:
   test-api:
     docker:
       - image: circleci/python:2.7.14
-      - image: circleci/postgres:9.6-alpine-ram  
+      # - image: circleci/postgres:9.6-alpine-ram  
     steps:
       - attach_workspace:
           at: .
