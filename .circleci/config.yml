@@ -12,18 +12,26 @@ references:
   postgresql_install: &postgresql_install
     run:
       command: |
-        sudo service postgresql stop
-        sudo apt-get purge -y postgresql*
-        sudo rm -rf /etc/postgresql
-        sudo rm -rf /var/lib/postgresql
-        sudo apt-get update
-        sudo apt-get install postgresql-9.6
+        # sudo apt-get purge -y postgresql*
+        # sudo rm -rf /etc/postgresql
+        # sudo rm -rf /var/lib/postgresql
+        # sudo apt-get update
+        # sudo apt-get install postgresql-9.6
         sudo su - postgres -c "echo \"create user ubuntu with password 'ubuntu';\" | psql"
         sudo su - postgres -c "echo \"alter user ubuntu with superuser;\" | psql"
         sudo su - postgres -c "echo \"create database ubuntu;\" | psql"
   api_monitor: &api_monitor
     run:
       command: |
+        # need to reinstall python2.7 as it seems to have issues with pip
+        # sudo apt-get install --reinstall python2.7
+        pip -V
+        sudo chmod -R 775 /usr/local/lib/python2.7/ # permissions issue when using pip install
+        sudo chmod -R 777 /usr/local/bin  # permission issue when upgrading pip
+        sudo ln -s /usr/lib/python2.7/plat-*/_sysconfigdata_nd.py /usr/lib/python2.7/ # issue with Ubuntu https://bugs.launchpad.net/ubuntu/+source/python2.7/+bug/1115466
+        sudo apt-get purge python-pip
+        sudo curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        python get-pip.py --force-reinstall
         pip install awscli
         sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
         sudo chmod +x /usr/local/bin/ecs-cli
@@ -50,16 +58,22 @@ jobs:
   build-api:
     docker:
       - image: circleci/python:2.7.14
+      - image: circleci/postgres:9.6-alpine-ram
+        environment:
+          POSTGRES_USER: ubuntu
+          POSTGRES_DB: ubuntu
+          POSTGRES_PASSWORD: ubuntu
     steps:
-      - *postgresql_install
+      # - *postgresql_install
       - *api_monitor
       - attach_workspace:
-          at: backend
+          at: .
       - run:
           command: |
+            cd backend
             pip install -r requirements.txt
       - persist_to_workspace:
-          root: ../
+          root: .
           paths:
             - backend
   build-frontend:
@@ -67,7 +81,6 @@ jobs:
       - image: circleci/node:8.11.1
         environment:
           TZ: "/usr/share/zoneinfo/Australia/Sydney"
-          # PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin" # Not sure if this is still required
     steps:
       - attach_workspace:
           at: .
@@ -84,11 +97,13 @@ jobs:
   test-api:
     docker:
       - image: circleci/python:2.7.14
+      - image: circleci/postgres:9.6-alpine-ram  
     steps:
       - attach_workspace:
-          at: backend
+          at: .
       - run: 
           command: |
+            cd backend
             ./scripts/run_tests.sh
             git log --pretty=format:'%h' -n 1 > version_label
   test-frontend:
@@ -109,6 +124,7 @@ jobs:
       - *cf_install
       - run:
           command: |
+            cd backend
             cf login -a https://api.system.y.cld.gov.au -o dta -s marketplace -u $CF_USER_STAGING -p $CF_PASSWORD_STAGING
             python ./db_tasks.py v2_test_migration $CIRCLE_BUILD_NUM api.system.y.cld.gov.au $CF_USER_STAGING $CF_PASSWORD_STAGING marketplace-dev-shared
             cf zero-downtime-push orams-dev-api -f manifest.yml --show-app-log
@@ -153,23 +169,23 @@ workflows:
   build-and-deploy:
     jobs:
       - setup
-      # - build-api:
-      #     requires:
-      #       - setup
-      # - test-api:
-      #     requires:
-      #       - build-api
-      # - deploy-dev-api:
-      #     <<: *master_branch_only
-      #     requires:
-      #       - test-api
-      - build-frontend:
+      - build-api:
           requires:
             - setup
-      - test-frontend:
+      - test-api:
           requires:
-            - build-frontend
-      - deploy-dev-frontend:
+            - build-api
+      - deploy-dev-api:
           <<: *master_branch_only
           requires:
-            - test-frontend
+            - test-api
+      # - build-frontend:
+      #     requires:
+      #       - setup
+      # - test-frontend:
+      #     requires:
+      #       - build-frontend
+      # - deploy-dev-frontend:
+      #     <<: *master_branch_only
+      #     requires:
+      #       - test-frontend
