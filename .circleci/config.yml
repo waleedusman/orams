@@ -48,6 +48,8 @@ jobs:
   build-api:
     docker:
       - image: circleci/python:2.7.14-stretch
+        environment:
+          TZ: "/usr/share/zoneinfo/Australia/Sydney"
     steps:
       - *update-libs
       - attach_workspace:
@@ -66,6 +68,8 @@ jobs:
   test-api:
     docker:
       - image: circleci/python:2.7.14-stretch
+        environment:
+          TZ: "/usr/share/zoneinfo/Australia/Sydney"
     steps:
       - *update-libs
       - *postgres-install
@@ -84,6 +88,8 @@ jobs:
   deploy-dev-api:
     docker:
       - image: circleci/python:2.7.14-stretch
+        environment:
+          TZ: "/usr/share/zoneinfo/Australia/Sydney"
     steps:
       - *cf-install
       - *update-libs
@@ -101,6 +107,8 @@ jobs:
   deploy-api:
     docker:
       - image: circleci/python:2.7.14-stretch
+        environment:
+          TZ: "/usr/share/zoneinfo/Australia/Sydney"
     steps:
       - *cf-install
       - *update-libs
@@ -137,6 +145,8 @@ jobs:
   test-frontend:
     docker:
       - image: circleci/node:8.11.1
+        environment:
+          TZ: "/usr/share/zoneinfo/Australia/Sydney"
     steps:
       - attach_workspace:
           at: .
@@ -148,6 +158,8 @@ jobs:
   deploy-dev-frontend:
     docker:
       - image: circleci/node:8.11.1
+        environment:
+          TZ: "/usr/share/zoneinfo/Australia/Sydney"
     steps:
       - *cf-install
       - attach_workspace:
@@ -160,6 +172,8 @@ jobs:
   deploy-frontend:
     docker:
       - image: circleci/node:8.11.1
+        environment:
+          TZ: "/usr/share/zoneinfo/Australia/Sydney"
     steps:
       - *cf-install
       - attach_workspace:
