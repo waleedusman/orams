@@ -19,6 +19,7 @@ from app.api.helpers import decode_creation_token, user_info
 from app.api.user import is_duplicate_user, update_user_details
 from datetime import datetime
 from app.swagger import swag
+from app.api.services import users
 
 
 @api.route('/users/me', methods=["GET"], endpoint='ping')
@@ -111,7 +112,9 @@ def login():
 
         login_user(user)
 
-        return jsonify(user_info(user))
+        user_organisation = users.get_user_organisation(get_email_domain(email_address))
+
+        return jsonify(user_info(user_organisation))
     else:
         user.failed_login_count += 1
         db.session.add(user)

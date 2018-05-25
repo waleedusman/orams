@@ -115,7 +115,7 @@ def slack_escape(text):
     return text
 
 
-def user_info(user):
+def user_info(user_organisation):
     try:
         user_type = current_user.role
     except AttributeError:
@@ -146,6 +146,7 @@ def user_info(user):
         "userType": user_type,
         "supplierCode": supplier_code,
         "emailAddress": email_address,
+        "organisation": user_organisation,
         "csrfToken": get_csrf_token(),
         "framework": framework
     }

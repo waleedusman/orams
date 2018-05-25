@@ -37,11 +37,11 @@ class ReferralBuilder extends Component {
   }
 
   render() {
-    const { supplierData, regionCode, regionsData, price } = this.props
+    const { supplierData, regionCode, regionsData, price, organisation } = this.props
 
     return (
       <div>
-        {supplierData && regionCode && regionsData && price
+        {supplierData && regionCode && regionsData && price && organisation
           ? <div>
             <div>
               <main>
@@ -94,10 +94,12 @@ class ReferralBuilder extends Component {
 
                 <div className="row">
                   <div className="col-sm-3 col-xs-12">
-                    <div className={styles.title}>Buyer organisation</div>
+                    <div className={styles.title}>Buyer Organisation</div>
                   </div>
                   <div className={styles.badge}>
-                    <input rows="10" cols="80"></input>
+                    <div className={styles.price}>
+                      {organisation}
+                    </div>
                   </div>
                 </div>
 
