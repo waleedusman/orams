@@ -29,7 +29,7 @@ references:
   master-branch-only: &master-branch-only
     filters:
       branches:
-        ignore:
+        only:
           - master
 
 jobs:
@@ -45,27 +45,8 @@ jobs:
           paths:
             - backend
             - frontend
-  build-api:
-    docker:
-      - image: circleci/python:2.7.14-stretch
-        environment:
-          TZ: "/usr/share/zoneinfo/Australia/Sydney"
-    steps:
-      - *update-libs
-      - attach_workspace:
-          at: .
-      - run:
-          name: Installing API Python libraries
-          command: |
-            cd backend
-            virtualenv venv
-            source venv/bin/activate
-            pip install -r requirements.txt
-      - persist_to_workspace:
-          root: .
-          paths:
-            - backend
-  test-api:
+            - .git  # required for test-api step
+  build-and-test-api:
     docker:
       - image: circleci/python:2.7.14-stretch
         environment:
@@ -76,6 +57,13 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Installing API Python libraries
+          command: |
+            cd backend
+            virtualenv venv
+            source venv/bin/activate
+            pip install -r requirements.txt
+      - run:
           name: Waiting for Postgres to be ready
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: 
@@ -85,6 +73,10 @@ jobs:
             source venv/bin/activate
             ./scripts/run_tests.sh
             git log --pretty=format:'%h' -n 1 > version_label
+      - persist_to_workspace:
+          root: .
+          paths:
+            - backend
   deploy-dev-api:
     docker:
       - image: circleci/python:2.7.14-stretch
@@ -124,7 +116,7 @@ jobs:
             python ./db_tasks.py v2_test_migration $CIRCLE_BUILD_NUM api.system.b.cld.gov.au $CF_USER_PROD $CF_PASSWORD_PROD pgdb-96-prod
             cf zero-downtime-push orams-api -f manifest-prod.yml --show-app-log
             cf run-and-wait orams-api "python ./db_tasks.py do_migration $CIRCLE_BUILD_NUM"
-  build-frontend:
+  build-and-test-frontend:
     docker:
       - image: circleci/node:8.11.1
         environment:
@@ -133,28 +125,22 @@ jobs:
       - attach_workspace:
           at: .
       - run: 
+          name: Building Front End
           command: | 
             cd frontend
             find . -name "node_modules" -exec rm -rf '{}' + # removing all node_modules/ folder cause circle can’t be trusted with it.
             npm install
             npm run build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - frontend
-  test-frontend:
-    docker:
-      - image: circleci/node:8.11.1
-        environment:
-          TZ: "/usr/share/zoneinfo/Australia/Sydney"
-    steps:
-      - attach_workspace:
-          at: .
       - run: 
+          name: Run Front End Tests
           command: |
             cd frontend 
             npm run eslint
             npm test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - frontend
   deploy-dev-frontend:
     docker:
       - image: circleci/node:8.11.1
@@ -189,23 +175,17 @@ workflows:
   build-and-deploy:
     jobs:
       - setup
-      - build-api:
+      - build-and-test-api:
           requires:
             - setup
-      - test-api:
-          requires:
-            - build-api
       - deploy-dev-api:
           <<: *master-branch-only
           requires:
-            - test-api
-      # - build-frontend:
-      #     requires:
-      #       - setup
-      # - test-frontend:
-      #     requires:
-      #       - build-frontend
-      # - deploy-dev-frontend:
-      #     <<: *master-branch-only
-      #     requires:
-      #       - test-frontend
+            - build-and-test-api
+      - build-and-test-frontend:
+          requires:
+            - setup
+      - deploy-dev-frontend:
+          <<: *master-branch-only
+          requires:
+            - build-and-test-frontend
