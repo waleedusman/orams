@@ -1,7 +1,3 @@
-drop view if exists vuser_users_with_briefs;
-drop view if exists govdomains;
-drop view if exists vuser;
-
 create view vuser as (
   select *, split_part(email_address, '@', 2) as email_domain from "user" u
 );
