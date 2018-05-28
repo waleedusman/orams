@@ -29,8 +29,15 @@ references:
   master-branch-only: &master-branch-only
     filters:
       branches:
-        only:
-          - master
+        only: master
+      tags:
+        ignore: /.*/
+  release-tag-only: &release-tag-only
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /[0-9]+(\.[0-9]+)*/
 
 jobs:
   setup:
@@ -117,6 +124,7 @@ jobs:
             python ./db_tasks.py v2_test_migration $CIRCLE_BUILD_NUM api.system.b.cld.gov.au $CF_USER_PROD $CF_PASSWORD_PROD orams-96-prod
             cf zero-downtime-push orams-api -f manifest-prod.yml --show-app-log
             cf run-and-wait orams-api "python ./db_tasks.py do_migration $CIRCLE_BUILD_NUM"
+            ./scripts/ci-notify.sh            
   build-and-test-frontend:
     docker:
       - image: circleci/node:8.11.1
@@ -193,13 +201,16 @@ workflows:
           requires:
             - build-and-test-frontend
       - unlock-prod-deploy:
+          <<: *release-tag-only
           type: approval
           requires:
             - deploy-dev-api
             - deploy-dev-frontend
       - deploy-api:
+          <<: *release-tag-only
           requires:
             - unlock-prod-deploy
       - deploy-frontend:
+          <<: *release-tag-only
           requires:
             - unlock-prod-deploy
