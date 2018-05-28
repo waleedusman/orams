@@ -14,6 +14,10 @@ class ReferralBuilderPage extends Component {
     this.state = {}
   }
 
+  componentDidMount() {
+    this.props.loadSupplierData(this.props.match.params.id)
+  }
+
   render() {
     const { match } = this.props
 
