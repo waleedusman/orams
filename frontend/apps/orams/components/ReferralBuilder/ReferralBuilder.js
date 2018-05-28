@@ -21,12 +21,13 @@ class ReferralBuilder extends Component {
     let regionName = ''
     let subRegionName = ''
     for (const region of regionData.regions) {
-      for (const subRegion of region.subRegions) {
-        if (subRegion.id == regionCode) {
-          regionName = region.name
-          subRegionName = subRegion.name
-          break
-        }
+      const foundSubRegion = region.subRegions.find((subRegion) => {
+        return subRegion.id = regionCode
+      })
+      if (foundSubRegion) {
+        regionName = region.name
+        subRegionName = foundSubRegion.name
+        break
       }
     }
     return regionName + ' ' + subRegionName
