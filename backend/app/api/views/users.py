@@ -38,6 +38,10 @@ def me():
             type: string
           supplierCode:
             type: integer
+          emailAddress:
+            type: string
+          organisation:
+            type: string
           csrfToken:
             type: string
     responses:

@@ -18,8 +18,8 @@ class ReferralBuilder extends Component {
   }
 
   retrieveRegionName(regionCode, regionData) {
-    let regionName
-    let subRegionName
+    let regionName = ''
+    let subRegionName = ''
     for (const region of regionData.regions) {
       for (const subRegion of region.subRegions) {
         if (subRegion.id == regionCode) {
