@@ -12,11 +12,6 @@ class ReferralBuilder extends Component {
     this.state = {}
   }
 
-  componentDidMount() {
-    this.props.loadSupplierData(this.props.id)
-    console.log('ReferralBuilder props: ', this.props)
-  }
-
   retrieveRegionName(regionCode, regionData) {
     let regionName = ''
     let subRegionName = ''
