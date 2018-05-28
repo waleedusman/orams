@@ -5,12 +5,9 @@ memory: 256M
 disk_quota: 1G
 instances: 1
 services:
-# - ups-dm-dev-common
 - ups-orams-dev-frontend
 routes:
 - route: orams-dev-frontend.apps.y.cld.gov.au
 - route: orams-dev.apps.y.cld.gov.au/
-# - route: orams-dev.apps.y.cld.gov.au/2
-# - route: dm-dev.apps.y.cld.gov.au/orams
 applications:
 - name: orams-dev-frontend

@@ -89,6 +89,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Deploying API to Staging
           command: |
             cd backend
             source venv/bin/activate
@@ -108,12 +109,12 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Deploying API to Prod
           command: |
             cd backend
             source venv/bin/activate
             cf login -a https://api.system.b.cld.gov.au -o dta -s marketplace -u $CF_USER_PROD -p $CF_PASSWORD_PROD
-            # TODO change marketplace db pgdb-96-prod to an orams db
-            python ./db_tasks.py v2_test_migration $CIRCLE_BUILD_NUM api.system.b.cld.gov.au $CF_USER_PROD $CF_PASSWORD_PROD pgdb-96-prod
+            python ./db_tasks.py v2_test_migration $CIRCLE_BUILD_NUM api.system.b.cld.gov.au $CF_USER_PROD $CF_PASSWORD_PROD orams-96-prod
             cf zero-downtime-push orams-api -f manifest-prod.yml --show-app-log
             cf run-and-wait orams-api "python ./db_tasks.py do_migration $CIRCLE_BUILD_NUM"
   build-and-test-frontend:
@@ -151,6 +152,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: 
+          name: Deploying Front End to Staging
           command: |
             cd frontend
             cf login -a https://api.system.y.cld.gov.au -o dta -s marketplace -u $CF_USER_STAGING -p $CF_PASSWORD_STAGING
@@ -165,6 +167,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: 
+          name: Deploying Front End to Prod
           command: |
             cd frontend
             cf login -a https://api.system.b.cld.gov.au -o dta -s marketplace -u $CF_USER_PROD -p $CF_PASSWORD_PROD
@@ -189,3 +192,14 @@ workflows:
           <<: *master-branch-only
           requires:
             - build-and-test-frontend
+      - unlock-prod-deploy:
+          type: approval
+          requires:
+            - deploy-dev-api
+            - deploy-dev-frontend
+      - deploy-api:
+          requires:
+            - unlock-prod-deploy
+      - deploy-frontend:
+          requires:
+            - unlock-prod-deploy

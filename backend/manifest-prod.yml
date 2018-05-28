@@ -5,11 +5,11 @@ instances: 4
 memory: 2G
 disk_quota: 512M
 services:
-- pgdb-96-prod  # this needs change to point to orams db service
-# - ups-dm-common
+- orams-96-prod
 - ups-orams-api
 routes:
 - route: orams-api.apps.b.cld.gov.au
 - route: orams-api.apps.b.cld.gov.au/api
+- route: orams.service.gov.au/api
 applications:
 - name: orams-api
