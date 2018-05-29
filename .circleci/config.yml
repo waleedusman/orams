@@ -38,12 +38,10 @@ references:
         only: /[0-9]+(\.[0-9]+)*/
       branches:
         ignore: /.*/
-  all-branches-and-filters: &all-branches-and-filters
+  all-branches-and-tags: &all-branches-and-tags
     filters:
       tags:
         only: /[0-9]+(\.[0-9]+)*/
-      branches:
-        only: /.*/
       
 
 jobs:
@@ -193,9 +191,9 @@ workflows:
   build-and-deploy:
     jobs:
       - setup:
-          <<: *all-branches-and-filters
+          <<: *all-branches-and-tags
       - build-and-test-api:
-          <<: *all-branches-and-filters
+          <<: *all-branches-and-tags
           requires:
             - setup
       - deploy-dev-api:
@@ -203,7 +201,7 @@ workflows:
           requires:
             - build-and-test-api
       - build-and-test-frontend:
-          <<: *all-branches-and-filters
+          <<: *all-branches-and-tags
           requires:
             - setup
       - deploy-dev-frontend:
