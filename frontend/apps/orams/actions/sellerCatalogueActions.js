@@ -11,6 +11,7 @@ import {
   SET_CATEGORY_ACCORDION_OPEN,
   SET_TABLE_FOCUS,
   SET_SUPPLIER_DATA,
+  SET_SELECTED_SUPPLIER_PRICE,
   SET_PROFILE_DATA
 } from 'orams/constants/constants'
 import { GENERAL_ERROR } from 'orams/constants/messageConstants'
@@ -57,6 +58,10 @@ export function setTableFocus(tableFocus) {
 
 export function setSupplierProfileData(supplierData) {
   return { type: SET_SUPPLIER_DATA, supplierData }
+}
+
+export function setSelectedSupplierPrice(price) {
+  return { type: SET_SELECTED_SUPPLIER_PRICE, price }
 }
 
 export function setProfileData(profileData) {

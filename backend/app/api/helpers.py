@@ -117,27 +117,32 @@ def slack_escape(text):
 
 def user_info(user):
     try:
-        user_type = current_user.role
+        user_type = user.role
     except AttributeError:
         user_type = 'anonymous'
 
     try:
-        email_address = current_user.email_address
+        email_address = user.email_address
     except AttributeError:
         email_address = None
 
     try:
-        supplier_code = current_user.supplier_code
+        supplier_code = user.supplier_code
     except AttributeError:
         supplier_code = None
 
     try:
-        framework = current_user.frameworks[0].framework.slug if current_user.frameworks else 'digital-marketplace'
+        user_organisation = user.user_organisation
+    except AttributeError:
+        user_organisation = None
+
+    try:
+        framework = user.frameworks[0].framework.slug if current_user.frameworks else 'digital-marketplace'
     except AttributeError:
         framework = None
 
     try:
-        is_authenticated = current_user.is_authenticated
+        is_authenticated = user.is_authenticated
     except AttributeError:
         is_authenticated = False
 
@@ -146,6 +151,7 @@ def user_info(user):
         "userType": user_type,
         "supplierCode": supplier_code,
         "emailAddress": email_address,
+        "organisation": user_organisation,
         "csrfToken": get_csrf_token(),
         "framework": framework
     }

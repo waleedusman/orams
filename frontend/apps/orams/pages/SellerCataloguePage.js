@@ -10,6 +10,7 @@ import {
   loadSuppliers,
   setCategoryData,
   setRegionData,
+  setSelectedSupplierPrice,
   setRegionAccordionOpen,
   setCategoryAccordionOpen
 } from 'orams/actions/sellerCatalogueActions'
@@ -64,6 +65,7 @@ const mapDispatchToProps = dispatch => {
     loadRegionsData: () => dispatch(loadRegions()),
     loadServicesData: () => dispatch(loadServices()),
     setRegion: region => dispatch(setRegionData(region)),
+    setSelectedSupplierPrice: price => dispatch(setSelectedSupplierPrice(price)),
     setCategory: category => dispatch(setCategoryData(category)),
     onRegionAccordionOpen: id => dispatch(setRegionAccordionOpen(id)),
     onCategoryAccordionOpen: id => dispatch(setCategoryAccordionOpen(id)),
