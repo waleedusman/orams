@@ -104,7 +104,10 @@ def suppliers(app, request):
 
             db.session.flush()
 
-            db.session.add(SupplierFramework(supplier_code=i, framework_id=framework.id))
+            if i == 5:
+                db.session.add(SupplierFramework(supplier_code=i, framework_id=7))
+            else:
+                db.session.add(SupplierFramework(supplier_code=i, framework_id=framework.id))
 
         db.session.commit()
         yield Supplier.query.all()
