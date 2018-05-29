@@ -9,6 +9,12 @@ import formProps from 'shared/form/formPropsSelector'
 import { login } from 'orams/actions/appActions'
 import { rootPath } from 'orams/routes'
 
+const userInitialPageMap = {
+  admin: '/admin',
+  buyer: '/seller-catalogue',
+  supplier: '/profile'
+}
+
 export class LoginPageComponent extends BaseForm {
   static propTypes = {
     model: PropTypes.string.isRequired,
