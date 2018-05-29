@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { getUserTypeHomeUrl, getUserTypeNavLinks } from '../../util/getUserTypeUrl'
 
 import styles from 'orams/components/Header/Header.scss'
 
@@ -11,23 +12,24 @@ class Header extends Component {
     const { userType, loggedIn } = this.props
 
     const home = () => {
-      if (loggedIn && userType === 'buyer') {
-        return '/seller-catalogue'
-      } else if (loggedIn && userType === 'supplier') {
-        return '/profile'
-      } else {
-        return '/'
-      }
+      const homeUrl = getUserTypeHomeUrl(loggedIn, userType)
+      return homeUrl;
     }
 
-    const secondaryLink = () => {
-      if (loggedIn && userType === 'buyer') {
-        return <Link to={`/seller-catalogue`}>Service Matrix</Link>
-      } else if (loggedIn && userType === 'supplier') {
-        return <Link to={`/edit-profile`}>Edit Profile</Link>
-      } else {
-        return <Link to={`/signup`}>Sign up</Link>
+    const navigationLinks = () => {
+      const navLinks = getUserTypeNavLinks(loggedIn, userType) || []
+      if (navLinks && navLinks.length) {
+        return navLinks.map((navLink) => {
+          const { url, text } = navLink
+          return (
+            <li>
+              <Link to={`${url}`}>{`${text}`}</Link>
+            </li>
+          )
+        })
       }
+
+      return ''
     }
 
     return (
@@ -51,19 +53,7 @@ class Header extends Component {
                   <li>
                     <a href="mailto:orams@ato.gov.au">Contact</a>
                   </li>
-                  <li>
-                    {secondaryLink()}
-                  </li>
-                  {loggedIn && userType == 'buyer'
-                    ? <li>
-                        <Link to={`/price-history`}>Price history</Link>
-                      </li>
-                    : ''}
-                  <li>
-                    {loggedIn
-                      ? <Link to={`/logout`}>Sign out</Link>
-                      : <Link to={`/login`}>Sign in</Link>}
-                  </li>
+                  {navigationLinks()}
                 </ul>
               </div>
             </div>
