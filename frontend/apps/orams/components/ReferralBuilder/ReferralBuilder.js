@@ -32,101 +32,114 @@ class ReferralBuilder extends Component {
     this.props.history.goBack()
   }
 
-  render() {
-    const { supplierData, regionCode, regionsData, price, organisation } = this.props
-
+  renderReferralInfo(supplierData, regionCode, regionsData, price, organisation) {
     return (
       <div>
-        {supplierData && regionCode && regionsData && price && organisation
-          ? <div>
-            <div>
-              <main>
-                <div className="row">
-                  <div className="col-xs-12 col-sm-9">
-                    <div className="au-display-xl">
-                      Send Referral
-                    </div>
+        <div>
+          <div>
+            <main>
+              <div className="row">
+                <div className="col-xs-12 col-sm-9">
+                  <div className="au-display-xl">
+                    Send Referral
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-sm-3 col-xs-12">
-                    <div className={styles.title}>Supplier</div>
-                  </div>
-                  <div className={styles.badge}>
-                    {supplierData.name}
-                  </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-3 col-xs-12">
+                  <div className={styles.title}>Supplier</div>
                 </div>
+                <div className={styles.badge}>
+                  {supplierData.name}
+                </div>
+              </div>
 
-                <div className="row">
-                  <div className="col-sm-3 col-xs-12">
-                    <div className={styles.title}>Services</div>
-                  </div>
-                  <div className={styles.badge}>
-                    {supplierData.category_name}
-                  </div>
+              <div className="row">
+                <div className="col-sm-3 col-xs-12">
+                  <div className={styles.title}>Services</div>
                 </div>
-
-                <div className="row">
-                  <div className="col-sm-3 col-xs-12">
-                    <div className={styles.title}>Operates in</div>
-                  </div>
-                  <div className={styles.badge}>
-                    {this.retrieveRegionName(regionCode, regionsData)}
-                  </div>
+                <div className={styles.badge}>
+                  {supplierData.category_name}
                 </div>
+              </div>
 
-                <div className="row">
-                  <div className="col-sm-3 col-xs-12">
-                    <div className={styles.title}>Price</div>
-                  </div>
-                  <div className={styles.badge}>
+              <div className="row">
+                <div className="col-sm-3 col-xs-12">
+                  <div className={styles.title}>Operates in</div>
+                </div>
+                <div className={styles.badge}>
+                  {this.retrieveRegionName(regionCode, regionsData)}
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-sm-3 col-xs-12">
+                  <div className={styles.title}>Price</div>
+                </div>
+                <div className={styles.badge}>
                    <span className={styles.priceElements}>
                      <div className={styles.price}>
                             {'$' + price + ' ' + 'inc GST'}
                             </div>
                    </span>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-sm-3 col-xs-12">
+                  <div className={styles.title}>Buyer Organisation</div>
+                </div>
+                <div className={styles.badge}>
+                  <div className={styles.price}>
+                    {organisation}
                   </div>
                 </div>
+              </div>
 
-                <div className="row">
-                  <div className="col-sm-3 col-xs-12">
-                    <div className={styles.title}>Buyer Organisation</div>
-                  </div>
-                  <div className={styles.badge}>
-                    <div className={styles.price}>
-                      {organisation}
-                    </div>
-                  </div>
+              <div className="row">
+                <div className="col-sm-3 col-xs-12">
+                  <div className={styles.title}>Content</div>
                 </div>
-
-                <div className="row">
-                  <div className="col-sm-3 col-xs-12">
-                    <div className={styles.title}>Content</div>
-                  </div>
-                  <div className={styles.badge}>
-                    <textarea rows="10" cols="80"></textarea>
-                  </div>
+                <div className={styles.badge}>
+                  <textarea rows="10" cols="80"></textarea>
                 </div>
+              </div>
 
 
-              </main>
-            </div>
-            <div className={styles.informationSection}>
-              <main>
-                <div className={styles.referral}>
-                  <button className="au-btn" onClick={() => {
-                    this.props.history.goBack()
-                  }}
-                  >Cancel
-                  </button>
-
-                </div>
-              </main>
-            </div>
+            </main>
           </div>
-          : <LoadingIndicatorFullPage/>}
+          <div className={styles.informationSection}>
+            <main>
+              <div className={styles.referral}>
+                <button className="au-btn" onClick={() => {
+                  this.props.history.goBack()
+                }}
+                >Cancel
+                </button>
+
+              </div>
+            </main>
+          </div>
+        </div>
       </div>
     )
+  }
+
+
+  render() {
+    const { supplierData, regionCode, regionsData, price, organisation } = this.props
+
+    const showReferralInfo = supplierData && regionCode && regionsData && price && organisation
+    if (showReferralInfo) {
+      return this.renderReferralInfo(supplierData, regionCode, regionsData, price, organisation)
+    }
+    else {
+      return (
+        <div>
+          <LoadingIndicatorFullPage/>
+        </div>
+      )
+    }
   }
 }
 

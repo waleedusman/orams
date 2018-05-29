@@ -36,7 +36,6 @@ class ResultsTable extends Component {
   }
 
   render(props) {
-    console.log('ResultsTable:', this.props)
     const { categories, alert } = this.props.data
 
     return (
