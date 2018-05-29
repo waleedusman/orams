@@ -42,7 +42,6 @@ references:
     filters:
       tags:
         only: /[0-9]+(\.[0-9]+)*/
-      
 
 jobs:
   setup:
@@ -208,17 +207,11 @@ workflows:
           <<: *master-branch-only
           requires:
             - build-and-test-frontend
-      - unlock-prod-deploy:
-          <<: *release-tag-only
-          type: approval
-          requires:
-            - deploy-dev-api
-            - deploy-dev-frontend
       - deploy-api:
           <<: *release-tag-only
           requires:
-            - unlock-prod-deploy
+            - deploy-dev-api
       - deploy-frontend:
           <<: *release-tag-only
           requires:
-            - unlock-prod-deploy
+            - deploy-dev-frontend
