@@ -116,9 +116,9 @@ def login():
 
         login_user(user)
 
-        user_organisation = users.get_user_organisation(get_email_domain(email_address))
+        user.user_organisation = users.get_user_organisation(get_email_domain(email_address))
 
-        return jsonify(user_info(user_organisation))
+        return jsonify(user_info(user))
     else:
         user.failed_login_count += 1
         db.session.add(user)
