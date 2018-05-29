@@ -6,7 +6,6 @@ memory: 1G
 disk_quota: 512M
 services:
 - orams-dev-shared
-# - ups-dm-dev-common
 - ups-orams-dev-api
 routes:
 - route: orams-dev-api.apps.y.cld.gov.au
