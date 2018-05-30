@@ -7,7 +7,7 @@ import LoginForm from 'shared/Login/LoginForm'
 import BaseForm from 'shared/form/BaseForm'
 import formProps from 'shared/form/formPropsSelector'
 import { login } from 'orams/actions/appActions'
-import { getUserTypeHomeUrl } from '../util/getUserTypeUrl'
+import { getUserTypeHomeUrl } from '../../util/getUserTypeUrl'
 
 export class HomePageComponent extends BaseForm {
   static propTypes = {
