@@ -9,7 +9,7 @@ from app.api.helpers import role_required
 
 @api.route('/regions', methods=['GET'], endpoint='list_regions')
 @login_required
-@role_required('buyer')
+@role_required('buyer', 'admin')
 def get_list():
     """All regions (role=buyer)
     ---

@@ -8,6 +8,7 @@ import BaseForm from 'shared/form/BaseForm'
 import formProps from 'shared/form/formPropsSelector'
 import { login } from 'orams/actions/appActions'
 import { rootPath } from 'orams/routes'
+import { getUserTypeHomeUrl } from '../util/getUserTypeUrl'
 
 export class LoginPageComponent extends BaseForm {
   static propTypes = {
@@ -33,7 +34,7 @@ export class LoginPageComponent extends BaseForm {
 
   render() {
     const { model, loggedIn, handleSubmit, currentlySending, userType } = this.props
-    const initialPage = userType === 'buyer' ? '/seller-catalogue' : '/profile'
+    const initialPage = getUserTypeHomeUrl(loggedIn, userType)
 
     return (
       <main>

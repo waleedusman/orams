@@ -21,7 +21,7 @@ ALERTS = {
 
 @api.route('/services', methods=['GET'], endpoint='list_services')
 @login_required
-@role_required('buyer')
+@role_required('buyer', 'admin')
 def get_list():
     """All services (role=buyer)
     ---
@@ -75,7 +75,7 @@ def get_list():
 
 @api.route('/services/<service_type_id>/regions/<region_id>/prices', methods=['GET'], endpoint='filter_services')
 @login_required
-@role_required('buyer')
+@role_required('buyer', 'admin')
 @is_service_current_framework
 def filter(service_type_id, region_id):
     """Filter suppliers and prices (role=buyer)

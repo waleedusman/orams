@@ -11,7 +11,7 @@ from app.emails.prices import send_price_change_email
 @api.route('/prices/suppliers/<int:code>/services/<service_type_id>/categories/<category_id>', methods=['GET'],
            endpoint='filter_prices')
 @login_required
-@role_required('buyer', 'supplier')
+@role_required('buyer', 'supplier', 'admin')
 @is_current_supplier
 @is_service_current_framework
 def filter(code, service_type_id, category_id):

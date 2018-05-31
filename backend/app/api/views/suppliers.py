@@ -8,7 +8,7 @@ from app.api.helpers import role_required, is_current_supplier
 
 @api.route('/suppliers/<int:code>', methods=['GET'], endpoint='get_supplier')
 @login_required
-@role_required('buyer', 'supplier')
+@role_required('buyer', 'supplier', 'admin')
 @is_current_supplier
 def get(code):
     """A supplier (role=buyer,supplier)
@@ -108,7 +108,7 @@ def get(code):
 
 @api.route('/suppliers/<int:code>', methods=['POST'], endpoint='update_supplier')
 @login_required
-@role_required('buyer', 'supplier')
+@role_required('buyer', 'supplier', 'admin')
 @is_current_supplier
 def update(code):
     """Update a supplier (role=buyer,supplier)
@@ -142,7 +142,7 @@ def update(code):
 
 @api.route('/suppliers', methods=['GET'], endpoint='list_suppliers')
 @login_required
-@role_required('buyer')
+@role_required('buyer', 'admin')
 def get_list():
     """All suppliers grouped by category (role=buyer)
     ---
