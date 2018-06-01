@@ -185,6 +185,8 @@ def update():
 def update_ceiling_price(ceiling_id):
     json_data = request.get_json()
     new_price = json_data.get('price')
+    if new_price < 0:
+        return jsonify(message='The new ceiling price must be greater than or equal to 0'), 400
     ceiling_prices.update_ceiling_price(ceiling_id, new_price)
     return jsonify({}), 200
 

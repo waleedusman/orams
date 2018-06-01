@@ -57,8 +57,19 @@ def test_ceiling_price_update_audited():
     raise Exception('NOT IMPLEMENTED')
 
 
-def test_ceiling_price_update_failed_when_new_value_less_than_zero():
-    raise Exception('NOT IMPLEMENTED')
+def test_ceiling_price_update_failed_when_new_value_less_than_zero(client, admin_users, service_type_prices):
+    res = client.post('/2/login', data=json.dumps({
+        'emailAddress': admin_users[0].email_address, 'password': 'testpassword'
+    }), content_type='application/json')
+    assert res.status_code == 200
+
+    ceiling_id = 1
+    new_price = -1
+    response = client.post(
+        '/2/ceiling-prices/{}'.format(ceiling_id),
+        data=json.dumps({'price': new_price}),
+        content_type='application/json')
+    assert response.status_code == 400
 
 # TODO test last write wins
 
