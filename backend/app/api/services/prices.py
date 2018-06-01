@@ -61,7 +61,15 @@ class CeilingPriceService(Service):
         return price
 
     def update_ceiling_price(self, ceiling_id, new_price):
-        rows_updated = db.session.query(ServiceTypePriceCeiling)\
-            .filter(ServiceTypePriceCeiling.id == ceiling_id)\
-            .update({"price": new_price})
-        return rows_updated
+        ceiling_price = self.get_ceiling_price(ceiling_id)
+        old_price = ceiling_price.price
+        ceiling_price.price = new_price
+        db.session.commit()
+        self.audit.create(
+            audit_type=AuditTypes.update_ceiling_price,
+            user=current_user.id,
+            data={
+                "oldPrice": old_price,
+                "newPrice": new_price
+            },
+            db_object=ceiling_price)
