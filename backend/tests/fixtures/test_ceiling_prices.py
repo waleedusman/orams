@@ -2,7 +2,7 @@ import json
 import pendulum
 
 
-def test_ceiling_price_updated_with_new_value(client, supplier_user, admin_users, service_type_prices):
+def test_ceiling_price_updated_with_new_value(client, admin_users, service_type_prices):
     res = client.post('/2/login', data=json.dumps({
         'emailAddress': admin_users[0].email_address, 'password': 'testpassword'
     }), content_type='application/json')
@@ -59,3 +59,9 @@ def test_ceiling_price_update_audited():
 
 def test_ceiling_price_update_failed_when_new_value_less_than_zero():
     raise Exception('NOT IMPLEMENTED')
+
+# TODO test last write wins
+
+# TODO test service-price updated when option checked and service-price exists (end-dated and new entry created)
+# TODO test service-price created when option checked and all existing service-price have expired
+# TODO test service-price created when option checked and no service-price exists

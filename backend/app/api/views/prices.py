@@ -183,8 +183,10 @@ def update():
 @role_required('admin')
 # @swag.validate('PriceUpdates')
 def update_ceiling_price(ceiling_id):
-    # TODO
-    return jsonify({})
+    json_data = request.get_json()
+    new_price = json_data.get('price')
+    ceiling_prices.update_ceiling_price(ceiling_id, new_price)
+    return jsonify({}), 200
 
 
 @api.route('/ceiling-prices/<ceiling_id>', methods=['GET'], endpoint='get_ceiling_price')

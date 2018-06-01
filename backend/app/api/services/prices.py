@@ -59,3 +59,9 @@ class CeilingPriceService(Service):
             .filter(ServiceTypePriceCeiling.id == ceiling_id)\
             .first()
         return price
+
+    def update_ceiling_price(self, ceiling_id, new_price):
+        rows_updated = db.session.query(ServiceTypePriceCeiling)\
+            .filter(ServiceTypePriceCeiling.id == ceiling_id)\
+            .update({"price": new_price})
+        return rows_updated
