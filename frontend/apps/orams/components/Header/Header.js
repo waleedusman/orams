@@ -20,9 +20,9 @@ class Header extends Component {
       const navLinks = getUserTypeNavLinks(loggedIn, userType) || []
       if (navLinks && navLinks.length) {
         return navLinks.map((navLink) => {
-          const { url, text } = navLink
+          const { key, url, text } = navLink
           return (
-            <li>
+            <li key={key}>
               <Link to={`${url}`}>{`${text}`}</Link>
             </li>
           )

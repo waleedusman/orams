@@ -9,6 +9,7 @@ import editPricingReducer from './editPricingReducer'
 import priceHistoryReducer from './priceHistoryReducer'
 import errorMessage from './errorMessage'
 import form_options from './form_options'
+import adminSearchReducer from './adminSearchReducer'
 
 export default combineReducers({
   app: appReducer,
@@ -16,6 +17,7 @@ export default combineReducers({
   sellersCatalogue: sellersCatalogueReducer,
   editPricing: editPricingReducer,
   priceHistory: priceHistoryReducer,
+  adminSearch: adminSearchReducer,
   form_options,
   errorMessage,
   options: (state = {}) => state,
@@ -33,6 +35,7 @@ export default combineReducers({
     contractVariationForm: {},
     providerHistoryForm: {},
     signupForm: {},
-    createUserPasswordForm: {}
+    createUserPasswordForm: {},
+    supplierSearchForm: {}
   })
 })

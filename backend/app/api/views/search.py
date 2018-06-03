@@ -18,19 +18,12 @@ from ...models import Supplier, SupplierFramework, SupplierContact, Contact
 @role_required('admin')
 def find_suppliers():
     orams_framework_id = 8
-    page = get_valid_page_or_1()
     prefix = request.args.get('supplier_name_prefix')
-    
-    results_per_page = get_positive_int_or_400(
-        request.args,
-        'per_page',
-        current_app.config['DM_API_SUPPLIERS_PAGE_SIZE']
-    )
 
     suppliers = Supplier.query.join(Supplier.frameworks) \
-            .filter(SupplierFramework.framework_id == orams_framework_id) \
-            .filter(Supplier.abn.is_(None) | (Supplier.abn != Supplier.DUMMY_ABN)) \
-            .filter(Supplier.status != 'deleted')
+        .filter(SupplierFramework.framework_id == orams_framework_id) \
+        .filter(Supplier.abn.is_(None) | (Supplier.abn != Supplier.DUMMY_ABN)) \
+        .filter(Supplier.status != 'deleted')
 
     if prefix:
         suppliers = suppliers.outerjoin(SupplierContact).outerjoin(Contact)
@@ -41,26 +34,9 @@ def find_suppliers():
             Contact.email.ilike('%{}%'.format(prefix))
             ))
 
-    suppliers = suppliers.distinct(Supplier.name, Supplier.code)
+    suppliers = suppliers.distinct(Supplier.name, Supplier.code)\
+        .order_by(Supplier.name)
 
-    try:
-        if results_per_page > 0:
-            paginator = suppliers.paginate(
-                page=page,
-                per_page=results_per_page,
-            )
-            links = pagination_links(
-                paginator,
-                '.search_suppliers',
-                request.args
-            )
-            supplier_results = paginator.items
-        else:
-            links = {
-                'self': url_for('.search_suppliers', _external=True, **request.args),
-            }
-            supplier_results = suppliers.all()
-        supplier_data = [supplier.serializable for supplier in supplier_results]
-    except DataError:
-        abort(400, 'invalid framework')
-    return jsonify(suppliers=supplier_data, links=links)
+    supplier_data = [supplier.serializable for supplier in suppliers.all()]
+
+    return jsonify(suppliers=supplier_data)
