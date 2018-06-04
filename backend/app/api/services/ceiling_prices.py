@@ -16,32 +16,28 @@ class CeilingPriceService(Service):
         self.audit = AuditService()
         self.prices_service = PricesService()
 
-    def get_ceiling_price(self, ceiling_id):
-        price = db.session.query(ServiceTypePriceCeiling)\
-            .filter(ServiceTypePriceCeiling.id == ceiling_id)\
-            .first()
-        return price
+    def _match_price_to_ceiling(self, price_id, ceiling_price=None):
+        """ Update the current price to the value of its ceiling.
+        An optional ceiling_price is provided in case the current price does not exist
 
-    def _match_current_price(self, price_id, ceiling_price):
-        """
-        :param price_id:    identifier of the db-record to be updated
-        :param new_price:   numeric value for new price
+        This does not handle scenarios where the current_price may be updated
+        by another request/transaction.
+
+        :param price_id:        identifier of the db-record to be updated
+        :param ceiling_price:   ServiceTypePriceCeiling object
         """
         existing_price = self.prices_service.get(price_id) if price_id else None
 
         date_from = pendulum.tomorrow(current_app.config['DEADLINES_TZ_NAME']).date()
         date_to = pendulum.Date.create(2050, 1, 1)
 
-        if existing_price and (ceiling_price.price > existing_price.service_type_price_ceiling.price):
-            raise Exception('new_price {} must be less than existing ceiling_price: {}'
-                            .format(
-                                ceiling_price.price,
-                                existing_price.service_type_price_ceiling.price))
-
         if existing_price:
             existing_price.date_to = date_from.subtract(days=1)
-            self.prices_service.add_price(existing_price, date_from, date_to, ceiling_price.price)
+            self.prices_service.add_price(
+                existing_price, date_from, date_to, existing_price.service_type_price_ceiling.price)
         else:
+            if not ceiling_price:
+                raise Exception("Ceiling price required to create new price record")
             self.prices_service.create(
                 supplier_code=ceiling_price.supplier_code,
                 service_type_id=ceiling_price.service_type_id,
@@ -53,15 +49,27 @@ class CeilingPriceService(Service):
                 service_type_price_ceiling_id=ceiling_price.id
             )
 
-    def update_ceiling_price(self, ceiling_id, new_price, match_current_price=False):
+    def update_ceiling_price(self, ceiling_id, new_ceiling, set_current_price_to_ceiling=False):
         """We only validate against a SINGLE (most recently updated) service_price.
         See the query in prices_service.get_prices() for further details on how prices are ordered.
 
         If multiple prices are related to the same ceiling_price, they will all be updated.
-        """
-        ceiling_price = self.get_ceiling_price(ceiling_id)
 
-        # Validate against current service price
+        In the case where the user has requested to update the current price to match the new
+        ceiling price, these two operations are done in separate transactions. There is no
+        requirement to ensure they are done atomically.
+
+        The following risks are accepted:
+        (1) Concurrent updates to a service-price or a ceiling-price are not considered.
+        (2) Failure in any database interaction may result in partial state changes. For example, if the
+        current_price fails to update, the ceiling price will have been changed but no audit record
+        would be saved.
+
+        :param set_current_price_to_ceiling: whether (or not) to set the current price to match the new ceiling price
+        """
+        ceiling_price = self.get(ceiling_id)
+
+        # Check if the new ceiling price is less than the current price
         supplier_prices = self.prices_service.get_prices(
             ceiling_price.supplier_code,
             ceiling_price.service_type_id,
@@ -69,23 +77,24 @@ class CeilingPriceService(Service):
             pendulum.today(current_app.config['DEADLINES_TZ_NAME']).date())
         if supplier_prices:
             current_price = supplier_prices[0]['price']
-            if new_price < float(current_price.strip(' "')):
+            if new_ceiling < float(current_price.strip(' "')):
                 abort('Ceiling price cannot be lower than ${} (current price)'.format(
                     current_price))
 
-        old_price = ceiling_price.price
-        ceiling_price.price = new_price
+        old_ceiling = ceiling_price.price
+        ceiling_price.price = new_ceiling
         db.session.commit()
 
-        if match_current_price:
+        # if there is a current_price, and it needs to match the ceiling, update it
+        if set_current_price_to_ceiling:
             price_id = supplier_prices[0]['id'] if supplier_prices else None
-            self._match_current_price(price_id, ceiling_price)
+            self._match_price_to_ceiling(price_id, ceiling_price)
 
         self.audit.create(
             audit_type=AuditTypes.update_ceiling_price,
             user=current_user.id,
             data={
-                "oldPrice": old_price,
-                "newPrice": new_price
+                "old": old_ceiling,
+                "new": new_ceiling
             },
             db_object=ceiling_price)

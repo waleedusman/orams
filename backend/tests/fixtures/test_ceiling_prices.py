@@ -12,7 +12,7 @@ def test_ceiling_price_updated_with_new_value(client, admin_users, service_type_
     new_price = 250
     response = client.post(
         '/2/ceiling-prices/{}'.format(ceiling_id),
-        data=json.dumps({'price': new_price}),
+        data=json.dumps({'ceilingPrice': new_price}),
         content_type='application/json')
     assert response.status_code == 200
 
@@ -31,7 +31,7 @@ def test_ceiling_price_update_failed_when_requested_by_supplier(client, supplier
     new_price = 100
     response = client.post(
         '/2/ceiling-prices/{}'.format(ceiling_id),
-        data=json.dumps({'price': new_price}),
+        data=json.dumps({'ceilingPrice': new_price}),
         content_type='application/json')
     assert response.status_code == 403
 
@@ -47,7 +47,7 @@ def test_ceiling_price_update_failed_when_requested_by_agency(client, users):
     new_price = 100
     response = client.post(
         '/2/ceiling-prices/{}'.format(ceiling_id),
-        data=json.dumps({'price': new_price}),
+        data=json.dumps({'ceilingPrice': new_price}),
         content_type='application/json')
     assert response.status_code == 403
 
@@ -65,15 +65,15 @@ def test_ceiling_price_update_audited(client, app, admin_users, service_type_pri
         new_price = 224.99
         response = client.post(
             '/2/ceiling-prices/{}'.format(ceiling_id),
-            data=json.dumps({'price': new_price}),
+            data=json.dumps({'ceilingPrice': new_price}),
             content_type='application/json')
         assert response.status_code == 200
         audit_event = AuditEvent.query\
             .filter(AuditEvent.type == 'update_ceiling_price')\
             .order_by(AuditEvent.created_at.desc())\
             .first()
-        assert audit_event.data['oldPrice'] == 321.56
-        assert audit_event.data['newPrice'] == 224.99
+        assert audit_event.data['old'] == 321.56
+        assert audit_event.data['new'] == 224.99
 
 
 def test_ceiling_price_update_failed_when_new_value_less_than_current_price(client, admin_users, service_type_prices):
@@ -86,7 +86,7 @@ def test_ceiling_price_update_failed_when_new_value_less_than_current_price(clie
     new_price = -1
     response = client.post(
         '/2/ceiling-prices/{}'.format(ceiling_id),
-        data=json.dumps({'price': new_price}),
+        data=json.dumps({'ceilingPrice': new_price}),
         content_type='application/json')
     assert response.status_code == 400
     response_body = json.loads(response.get_data())
@@ -107,7 +107,7 @@ def test_current_price_unaffected_when_matching_not_required(client, admin_users
     new_price = 500
     response = client.post(
         '/2/ceiling-prices/{}'.format(ceiling_id),
-        data=json.dumps({'price': new_price}),
+        data=json.dumps({'ceilingPrice': new_price}),
         content_type='application/json')
     assert response.status_code == 200
 
@@ -138,7 +138,7 @@ def test_current_price_updated_when_matching_required(
     new_price = 290
     response = client.post(
         '/2/ceiling-prices/{}'.format(ceiling_id),
-        data=json.dumps({'price': new_price, 'matchCurrentPrice': True}),
+        data=json.dumps({'ceilingPrice': new_price, 'setCurrentPriceToCeiling': True}),
         content_type='application/json')
     assert response.status_code == 200
 
@@ -174,7 +174,7 @@ def test_current_price_updated_when_matching_required_and_future_price_exists(
     new_price = 290
     response = client.post(
         '/2/ceiling-prices/{}'.format(ceiling_id),
-        data=json.dumps({'price': new_price, 'matchCurrentPrice': True}),
+        data=json.dumps({'ceilingPrice': new_price, 'setCurrentPriceToCeiling': True}),
         content_type='application/json')
     assert response.status_code == 200
 
@@ -210,7 +210,7 @@ def test_current_price_created_when_none_exists(
     new_price = 290
     response = client.post(
         '/2/ceiling-prices/{}'.format(ceiling_id),
-        data=json.dumps({'price': new_price, 'matchCurrentPrice': True}),
+        data=json.dumps({'ceilingPrice': new_price, 'setCurrentPriceToCeiling': True}),
         content_type='application/json')
     assert response.status_code == 200
 
@@ -240,7 +240,7 @@ def test_current_price_created_when_all_expired(
     new_price = 310
     response = client.post(
         '/2/ceiling-prices/{}'.format(ceiling_id),
-        data=json.dumps({'price': new_price, 'matchCurrentPrice': True}),
+        data=json.dumps({'ceilingPrice': new_price, 'setCurrentPriceToCeiling': True}),
         content_type='application/json')
     assert response.status_code == 200
 

@@ -181,19 +181,17 @@ def update():
 @api.route('/ceiling-prices/<ceiling_id>', methods=['POST'], endpoint='update_ceiling_price')
 @login_required
 @role_required('admin')
-# @swag.validate('PriceUpdates')
 def update_ceiling_price(ceiling_id):
     json_data = request.get_json()
-    new_price = json_data.get('price')
-    match_current_price = json_data.get('matchCurrentPrice', False)
-    ceiling_prices.update_ceiling_price(ceiling_id, new_price, match_current_price)
+    new_ceiling = json_data.get('ceilingPrice')
+    set_current_price_to_ceiling = json_data.get('setCurrentPriceToCeiling', False)
+    ceiling_prices.update_ceiling_price(ceiling_id, new_ceiling, set_current_price_to_ceiling)
     return jsonify({}), 200
 
 
 @api.route('/ceiling-prices/<ceiling_id>', methods=['GET'], endpoint='get_ceiling_price')
 @login_required
 @role_required('admin')
-# @swag.validate('PriceUpdates')
 def get_ceiling_price(ceiling_id):
-    ceiling_price = ceiling_prices.get_ceiling_price(ceiling_id)
+    ceiling_price = ceiling_prices.get(ceiling_id)
     return jsonify(ceiling_price), 200
