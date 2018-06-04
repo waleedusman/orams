@@ -44,8 +44,8 @@ class PricesService(Service):
         db.session.commit()
 
         self.audit.create(
-          audit_type=AuditTypes.update_price,
-          user=current_user.id,
-          data={},
-          db_object=new_price)
+            audit_type=AuditTypes.update_price,
+            user=current_user.id,
+            data={},
+            db_object=new_price)
         return new_price

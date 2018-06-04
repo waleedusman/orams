@@ -185,7 +185,8 @@ def update():
 def update_ceiling_price(ceiling_id):
     json_data = request.get_json()
     new_price = json_data.get('price')
-    ceiling_prices.update_ceiling_price(ceiling_id, new_price)
+    match_current_price = json_data.get('matchCurrentPrice', False)
+    ceiling_prices.update_ceiling_price(ceiling_id, new_price, match_current_price)
     return jsonify({}), 200
 
 
