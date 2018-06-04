@@ -1,5 +1,6 @@
+from sqlalchemy.sql import or_
 from app.api.helpers import Service
-from app.models import Supplier
+from app.models import Supplier, SupplierFramework, SupplierContact, Contact
 
 
 class SuppliersService(Service):
@@ -7,3 +8,25 @@ class SuppliersService(Service):
 
     def __init__(self, *args, **kwargs):
         super(SuppliersService, self).__init__(*args, **kwargs)
+
+    def find_suppliers(self, prefix):
+        orams_framework_id = 8
+
+        suppliers = Supplier.query.join(Supplier.frameworks) \
+            .filter(SupplierFramework.framework_id == orams_framework_id) \
+            .filter(Supplier.abn.is_(None) | (Supplier.abn != Supplier.DUMMY_ABN)) \
+            .filter(Supplier.status != 'deleted')
+
+        if prefix:
+            suppliers = suppliers.outerjoin(SupplierContact).outerjoin(Contact)
+            # case insensitive LIKE comparison for matching supplier names, supplier email and contact email
+            suppliers = suppliers.filter(or_(
+                Supplier.name.ilike(prefix + '%'),
+                Supplier.data['email'].astext.ilike('%{}%'.format(prefix)),
+                Contact.email.ilike('%{}%'.format(prefix))
+                ))
+
+        suppliers = suppliers.distinct(Supplier.name, Supplier.code)\
+            .order_by(Supplier.name)
+
+        return [supplier.serializable for supplier in suppliers.all()]
