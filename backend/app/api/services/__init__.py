@@ -1,4 +1,5 @@
-from .prices import PricesService, CeilingPriceService
+from .prices import PricesService
+from .ceiling_prices import CeilingPriceService
 from .audit import AuditService, AuditTypes
 from .assessments import AssessmentsService
 from .suppliers import SuppliersService

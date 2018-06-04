@@ -1,7 +1,7 @@
 from flask_login import current_user
 from app.api.helpers import Service
 from app import db
-from app.models import ServiceTypePrice, Region, ServiceTypePriceCeiling
+from app.models import ServiceTypePrice, Region
 from .audit import AuditService, AuditTypes
 
 
@@ -43,33 +43,9 @@ class PricesService(Service):
         db.session.add(new_price)
         db.session.commit()
 
-        self.audit.create(audit_type=AuditTypes.update_price, user=current_user.id, data={}, db_object=new_price)
-        return new_price
-
-
-class CeilingPriceService(Service):
-    __model__ = ServiceTypePriceCeiling
-
-    def __init__(self, *args, **kwargs):
-        super(CeilingPriceService, self).__init__(*args, **kwargs)
-        self.audit = AuditService()
-
-    def get_ceiling_price(self, ceiling_id):
-        price = db.session.query(ServiceTypePriceCeiling)\
-            .filter(ServiceTypePriceCeiling.id == ceiling_id)\
-            .first()
-        return price
-
-    def update_ceiling_price(self, ceiling_id, new_price):
-        ceiling_price = self.get_ceiling_price(ceiling_id)
-        old_price = ceiling_price.price
-        ceiling_price.price = new_price
-        db.session.commit()
         self.audit.create(
-            audit_type=AuditTypes.update_ceiling_price,
-            user=current_user.id,
-            data={
-                "oldPrice": old_price,
-                "newPrice": new_price
-            },
-            db_object=ceiling_price)
+          audit_type=AuditTypes.update_price,
+          user=current_user.id,
+          data={},
+          db_object=new_price)
+        return new_price
