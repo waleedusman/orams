@@ -9,30 +9,36 @@ const userTypeHomeUrlMap = {
 const userTypeNavLinksMap = {
   admin: [
     {
+      key: 'admin',
       url: '/admin',
       text: 'Admin'
     },
     {
+      key: 'seller-catalogue',
       url: '/seller-catalogue',
       text: 'Service Matrix'
     },
     {
+      key: 'price-history',
       url: '/price-history',
       text: 'Price history'
     }
   ],
   buyer: [
     {
+      key: 'seller-catalogue',
       url: '/seller-catalogue',
       text: 'Service Matrix'
     },
     {
+      key: 'price-history',
       url: '/price-history',
       text: 'Price history'
     }
   ],
   supplier: [
     {
+      key: 'edit-profile',
       url: '/edit-profile',
       text: 'Edit Profile'
     }
@@ -40,6 +46,7 @@ const userTypeNavLinksMap = {
 }
 
 const logoutLink = {
+  key: 'logout',
   url: '/logout',
   text: 'Sign out'
 }
@@ -65,10 +72,12 @@ export const getUserTypeNavLinks = (loggedIn, userType) => {
 
   return [
     {
+      key: 'signup',
       url: '/signup',
       text: 'Sign up'
     },
     {
+      key: 'login',
       url: '/login',
       text: 'Sign in'
     }
