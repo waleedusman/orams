@@ -28,7 +28,7 @@ export const Routes = () =>
     <Route path={`/signup`} component={SignupPage} />
     <Route path={`/login`} component={LoginPage} />
     <Route path={`/logout`} component={LogoutPage} />
-    <Route path={`/admin`} component={AdminPage} />
+    <PrivateRoute path={`/admin`} component={AdminPage} />
     <PrivateRoute path={`/edit-profile`} component={EditProfilePage} />
     <PrivateRoute path={`/seller-catalogue`} component={SellerCataloguePage} />
     <PrivateRoute path={`/seller-profile/:id`} component={SellerProfilePage} />

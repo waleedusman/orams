@@ -121,8 +121,8 @@ class Config:
                              'live.com.au', 'digital.gov.au', 'icloud.com', 'me.com']
 
     FRONTEND_ADDRESS = 'https://orams-dev.apps.y.cld.gov.au'
-    ADMIN_ADDRESS = 'https://orams-dev-admin.apps.y.cld.gov.au'
-    APP_ROOT = {'digital-marketplace': '/2', 'orams': '/orams'}
+    ADMIN_ADDRESS = 'https://orams-dev.apps.y.cld.gov.au'
+    APP_ROOT = {'digital-marketplace': '/2', 'orams': '/'}
 
     SEND_EMAILS = True
     CSRF_ENABLED = False

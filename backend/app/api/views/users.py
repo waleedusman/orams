@@ -302,7 +302,7 @@ def send_invite(token):
         data = decode_creation_token(token.encode())
         email_address = data.get('email_address', None)
         name = data.get('name', None)
-        framework = data.get('framework', 'digital-marketplace')
+        framework = data.get('framework', 'orams')
         user_type = data.get('user_type', None)
         send_account_activation_email(name, email_address, user_type, framework)
         return jsonify(email_address=email_address, name=name), 200

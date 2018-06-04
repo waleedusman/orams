@@ -9,7 +9,7 @@ def test_signup_handles_valid_token(client, users):
         name=user.name,
         email_address=user.email_address,
         user_type=user.role,
-        framework='digital-marketplace'
+        framework='orams'
     )
 
     response = client.get(
@@ -21,7 +21,7 @@ def test_signup_handles_valid_token(client, users):
     assert data['name'] == user.name
     assert data['email_address'] == user.email_address
     assert data['user_type'] == user.role
-    assert data['framework'] == 'digital-marketplace'
+    assert data['framework'] == 'orams'
 
 
 def test_send_buyer_invite_invalid_token(client):

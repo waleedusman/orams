@@ -137,7 +137,7 @@ def user_info(user):
         user_organisation = None
 
     try:
-        framework = user.frameworks[0].framework.slug if current_user.frameworks else 'digital-marketplace'
+        framework = user.frameworks[0].framework.slug if current_user.frameworks else 'orams'
     except AttributeError:
         framework = None
 

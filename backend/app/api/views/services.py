@@ -61,7 +61,7 @@ def get_list():
     services_data = db.session.query(ServiceType, ServiceCategory)\
         .join(ServiceCategory, ServiceType.category_id == ServiceCategory.id)\
         .filter(ServiceCategory.name.in_(['Medical', 'Rehabilitation']))\
-        .order_by(ServiceCategory.id, ServiceType.id.desc())\
+        .order_by(ServiceCategory.id, ServiceType.id)\
         .all()
 
     services = [s.ServiceType.serializable for s in services_data]
