@@ -68,6 +68,8 @@ class CeilingPriceService(Service):
         :param set_current_price_to_ceiling: whether (or not) to set the current price to match the new ceiling price
         """
         ceiling_price = self.get(ceiling_id)
+        if not ceiling_price:
+            abort('Ceiling price with id {} does not exist'.format(ceiling_id))
 
         # Check if the new ceiling price is less than the current price
         supplier_prices = self.prices_service.get_prices(
